@@ -33,6 +33,7 @@ export const api = {
   stopProject: (projectId: string) =>
     invoke<void>("stop_project", { projectId }),
   listRunning: () => invoke<string[]>("list_running"),
+  getAppVersion: () => invoke<string>("get_app_version"),
   getSettings: () => invoke<Settings>("get_settings"),
   saveSettings: (settings: Settings) =>
     invoke<void>("save_settings", { settings }),

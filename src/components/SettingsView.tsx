@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { openUrl } from "@tauri-apps/plugin-opener";
+import { check as checkForUpdate } from "@tauri-apps/plugin-updater";
+import { relaunch } from "@tauri-apps/plugin-process";
 import { Segmented } from "./Segmented";
 import { api, type UpdateInfo } from "../lib/backend";
 import {
@@ -38,6 +40,11 @@ export function SettingsView() {
   const [resetting, setResetting] = useState(false);
   const [checking, setChecking] = useState(false);
   const [lastUpdate, setLastUpdate] = useState<UpdateInfo | null>(null);
+  const [version, setVersion] = useState<string | null>(null);
+
+  useEffect(() => {
+    api.getAppVersion().then(setVersion).catch(() => {});
+  }, []);
 
   /**
    * Persist any patch through the backend so disk + managed Rust state stay in
@@ -73,6 +80,25 @@ export function SettingsView() {
     if (checking) return;
     setChecking(true);
     try {
+      // Prefer Tauri's signed-bundle updater when the plugin is reachable;
+      // it can download + verify + relaunch in one call. Fall back to our
+      // HTTP probe (GitHub Releases API) when the plugin errors — that path
+      // still reports availability so the user knows to grab the installer.
+      try {
+        const update = await checkForUpdate();
+        if (update) {
+          toast.success(`Update available: v${update.version} — installing…`);
+          await update.downloadAndInstall();
+          await relaunch();
+          return;
+        }
+        const info = await api.checkUpdate();
+        setLastUpdate(info);
+        toast.success(`You're up to date (v${info.current})`);
+        return;
+      } catch (pluginErr) {
+        console.warn("[updater] plugin failed, falling back to HTTP", pluginErr);
+      }
       const info = await api.checkUpdate();
       setLastUpdate(info);
       if (info.hasUpdate && info.latest) {
@@ -226,6 +252,9 @@ export function SettingsView() {
                 aria-hidden
               />
               <span className="settings-footer__name">Dev Launch Kit</span>
+              {version && (
+                <span className="settings-footer__version">v{version}</span>
+              )}
             </div>
             <div className="settings-footer__author">
               Crafted by{" "}

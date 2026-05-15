@@ -52,6 +52,8 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_window_state::Builder::default().build())
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_process::init())
         .invoke_handler(tauri::generate_handler![
             commands::list_projects,
             commands::save_projects,
@@ -64,6 +66,7 @@ pub fn run() {
             commands::check_update,
             commands::list_listening_ports,
             commands::kill_port_process,
+            commands::get_app_version,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

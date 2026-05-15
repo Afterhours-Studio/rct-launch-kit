@@ -42,6 +42,14 @@ pub async fn list_running(app: AppHandle) -> Result<Vec<String>, String> {
     Ok(runner::list_running(&app).await)
 }
 
+/// Current app version, baked in at compile time from Cargo.toml.
+/// CI/CD's "Stamp version" step rewrites Cargo.toml so each release exe
+/// reports its own tag without any runtime config to read.
+#[tauri::command]
+pub fn get_app_version() -> String {
+    env!("CARGO_PKG_VERSION").to_string()
+}
+
 // ---------- Port Explorer ----------
 
 #[tauri::command]

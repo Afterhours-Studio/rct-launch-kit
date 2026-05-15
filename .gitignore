@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Tauri code-signing keypair — NEVER commit. The private key is loaded
+# from GitHub Actions secrets at build time; the public key lives inline
+# in src-tauri/tauri.conf.json under plugins.updater.pubkey.
+*.key
+*.key.pub
