@@ -18,6 +18,13 @@
   box-shadow: var(--shadow-2), var(--hairline-inset);
 }
 
+/* Settings view manages its own right gutter and wants the scrollbar
+ * flush against the glass panel edge. Drop the wrapper's right padding
+ * so the scroll container can reach all the way to the border. */
+.content--flush-right {
+  padding-right: 0;
+}
+
 .content-header {
   flex-shrink: 0;
   display: flex;

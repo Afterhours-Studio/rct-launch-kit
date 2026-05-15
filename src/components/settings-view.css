@@ -10,7 +10,10 @@
   min-height: 0;
   min-width: 0;
   overflow-y: auto;
-  padding: 4px 4px 8px;
+  /* Parent .content--flush-right zeroes its own right padding so the
+   * scrollbar sits at the panel edge. We add a content gutter here on
+   * the right so section bodies don't touch the scrollbar. */
+  padding: 4px 12px 8px 4px;
   display: flex;
   flex-direction: column;
   gap: 18px;

@@ -7,7 +7,7 @@ import "./content.css";
 export function Content() {
   const view = useView((s) => s.view);
   return (
-    <section className="content">
+    <section className={`content${view === "settings" ? " content--flush-right" : ""}`}>
       {view === "settings" ? (
         <SettingsView />
       ) : view === "forge" ? (
