@@ -679,7 +679,11 @@ async fn run_step(
         project_id,
         lane_id,
         step_idx,
-        format!("$ {}", command),
+        format!(
+            "$ {}    [cwd: {}]",
+            command,
+            if cwd.is_empty() { "<inherited>" } else { cwd }
+        ),
     );
 
     let settings = app.state::<SettingsState>().snapshot();
