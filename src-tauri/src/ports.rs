@@ -3,7 +3,6 @@
 //! crashed runs (port 1420, 3000, 5173, etc).
 
 use serde::Serialize;
-use std::process::Stdio;
 use sysinfo::{ProcessRefreshKind, ProcessesToUpdate, RefreshKind, System};
 
 #[derive(Serialize, Clone)]
@@ -157,6 +156,7 @@ pub fn kill_pid(pid: u32) -> anyhow::Result<()> {
     #[cfg(windows)]
     {
         use std::os::windows::process::CommandExt;
+        use std::process::Stdio;
         let status = std::process::Command::new("taskkill")
             .args(["/F", "/T", "/PID", &pid.to_string()])
             .creation_flags(0x0800_0000)
