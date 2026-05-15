@@ -1,0 +1,280 @@
+.content {
+  position: fixed;
+  top: calc(32px + 8px);
+  left: calc(8px + var(--sidebar-width, 240px) + var(--sidebar-gap, 8px));
+  transition: left 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
+  right: 8px;
+  bottom: 8px;
+  background: var(--content-bg);
+  border-radius: 8px;
+  border: 1px solid var(--content-border);
+  overflow: hidden;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.content-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 3px;
+  height: 40px;
+}
+
+.content-header__title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+  /* No overflow:hidden here — would clip the inline-edit input's focus ring
+   * and 1px coral border (the input extends 2px past the title's left edge
+   * via margin-left: -5px, plus a 2px box-shadow halo). The inner spans
+   * already handle their own ellipsis. */
+}
+
+.content-header__name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-strong);
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.content-header__name--btn {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 2px 6px;
+  margin-left: -6px;
+  cursor: text;
+  text-align: left;
+  font-family: inherit;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+.content-header__name--btn:hover {
+  background: var(--popover-item-hover);
+  border-color: var(--popover-border);
+}
+
+.content-header__name-input {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-strong);
+  line-height: 1.1;
+  /* Distinct from the surrounding .content surface so the field reads as an
+   * editable input, not a transparent label. */
+  background: var(--sidebar-panel-bg);
+  border: 1px solid #cc785c;
+  border-radius: 4px;
+  padding: 2px 6px;
+  margin-left: -6px;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(204, 120, 92, 0.18);
+  font-family: inherit;
+  width: 240px;
+  max-width: 100%;
+}
+
+.content-header__path {
+  font-size: 11px;
+  color: var(--popover-text-muted);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.content-header__lanes {
+  margin-left: 4px;
+  color: #cc785c;
+  font-weight: 600;
+}
+
+/* ---- Placeholder (Forge etc.) ---- */
+.content-placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.content-placeholder__inner {
+  text-align: center;
+  max-width: 360px;
+}
+
+.content-placeholder__title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: -0.5px;
+  color: var(--text-strong);
+  margin-bottom: 8px;
+}
+
+.content-placeholder__text {
+  font-size: 12px;
+  color: var(--popover-text-muted);
+  margin: 0;
+  line-height: 1.55;
+}
+
+.content-header__actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.content-header__sep {
+  width: 1px;
+  height: 18px;
+  background: var(--popover-divider);
+  margin: 0 4px;
+}
+
+.content-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--popover-text-icon);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.content-icon-btn:hover:not(:disabled) {
+  background: var(--popover-item-hover);
+  color: var(--popover-text);
+}
+
+.content-icon-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.content-play-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 12px 0 10px;
+  border: none;
+  border-radius: 6px;
+  background: #cc785c;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.content-play-btn:hover:not(:disabled) {
+  background: #a9583e;
+}
+
+.content-play-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.content-play-btn--running {
+  background: #c64545;
+}
+
+.content-play-btn--running:hover:not(:disabled) {
+  background: #a83838;
+}
+
+.content-save-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 12px 0 10px;
+  border: 1px solid var(--popover-border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--popover-text);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease, opacity 0.12s ease;
+}
+
+.content-save-btn:hover:not(:disabled) {
+  background: var(--popover-item-hover);
+}
+
+.content-save-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.content-save-btn__dot {
+  position: absolute;
+  top: 5px;
+  right: 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #cc785c;
+  box-shadow: 0 0 0 1.5px var(--content-bg);
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.content-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  min-width: 0;
+}
+
+.content-col--main {
+  /* two stacked panes, equal height */
+}
+
+.content-col--side {
+  /* single tall pane */
+}
+
+.content-pane {
+  background: var(--sidebar-panel-bg);
+  border-radius: 8px;
+  min-height: 0;
+  min-width: 0;
+}
+
+.content-pane--top,
+.content-pane--bottom {
+  flex: 1;
+}
+
+.content-pane--side {
+  flex: 1;
+}

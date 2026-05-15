@@ -1,0 +1,95 @@
+.titlebar {
+  height: 32px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 5000;
+  user-select: none;
+}
+
+.titlebar-cluster {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding-left: 10px;
+  gap: 2px;
+  -webkit-app-region: no-drag;
+}
+
+.titlebar-drag {
+  flex: 1;
+  height: 100%;
+}
+
+.titlebar-icon-btn {
+  width: 28px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 5px;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+  transition: background 0.12s ease;
+}
+
+.titlebar-icon-btn svg {
+  opacity: 1;
+  fill: none;
+  stroke: currentColor;
+}
+
+.titlebar-icon-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.titlebar-icon-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+
+.titlebar-sep {
+  width: 1px;
+  height: 14px;
+  background: #a09d96;
+  margin: 0 4px;
+}
+
+.titlebar-controls {
+  display: flex;
+  height: 100%;
+}
+
+.titlebar-btn {
+  width: 46px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+  padding: 0;
+  outline: none;
+}
+
+.titlebar-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.titlebar-btn--close:hover {
+  background: #c0392b;
+  color: #fff;
+}

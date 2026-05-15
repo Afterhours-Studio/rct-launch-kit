@@ -1,0 +1,94 @@
+:root,
+:root[data-theme="light"] {
+  /* Surface */
+  --sidebar-bg: #faf9f5;
+  --sidebar-border: #e6dfd8;
+  --sidebar-panel-bg: #efe9de;
+  --content-bg: #faf9f5;
+  --content-border: #e6dfd8;
+  --resize-handle: rgba(20, 20, 19, 0.2);
+
+  /* Tab selector */
+  --tab-container-bg: #e8e0d2;
+  --tab-active-bg: #faf9f5;
+  --tab-active-border: #e6dfd8;
+  --tab-active-text: #cc785c;
+  --tab-text: #6c6a64;
+  --tab-text-hover: #141413;
+
+  /* Footer */
+  --footer-text: #6c6a64;
+  --footer-icon: #6c6a64;
+  --footer-icon-hover-bg: rgba(20, 20, 19, 0.06);
+
+  /* Sidebar layout */
+  --sidebar-width: 240px;
+
+  /* Popover / dropdown / modal */
+  --popover-bg: #faf9f5;
+  --popover-bg-strong: #faf9f5;
+  --popover-border: rgba(20, 20, 19, 0.1);
+  --popover-divider: #ebe6df;
+  /* DESIGN.md text scale: ink=#141413 (headlines only), body=#3d3d3a
+   * (default), body-strong=#252523, muted=#6c6a64, muted-soft=#8e8b82.
+   * popover-text is the "default running text" token used app-wide. */
+  --popover-text: #3d3d3a;
+  --text-strong: #141413;
+  --popover-text-muted: #6c6a64;
+  --popover-text-icon: #6c6a64;
+  --popover-item-hover: rgba(20, 20, 19, 0.06);
+  --popover-item-selected: #efe9de;
+  --popover-shadow: rgba(20, 20, 19, 0.28);
+  --overlay-bg: rgba(20, 20, 19, 0.55);
+
+  /* Tooltip */
+  --tooltip-bg: #efe9de;
+  --tooltip-text: #141413;
+  --tooltip-shortcut: #6c6a64;
+  --tooltip-border: rgba(20, 20, 19, 0.1);
+
+  /* Scrollbar */
+  --scrollbar-thumb: rgba(20, 20, 19, 0.18);
+  --scrollbar-thumb-hover: rgba(20, 20, 19, 0.32);
+}
+
+:root[data-theme="dark"] {
+  --sidebar-bg: #1f1e1b;
+  --sidebar-border: rgba(250, 249, 245, 0.08);
+  --sidebar-panel-bg: #252320;
+  --content-bg: #1f1e1b;
+  --content-border: rgba(250, 249, 245, 0.08);
+  --resize-handle: rgba(250, 249, 245, 0.25);
+
+  --tab-container-bg: #181715;
+  --tab-active-bg: #252320;
+  --tab-active-border: rgba(250, 249, 245, 0.08);
+  --tab-active-text: #cc785c;
+  --tab-text: #a09d96;
+  --tab-text-hover: #faf9f5;
+
+  --footer-text: #a09d96;
+  --footer-icon: #a09d96;
+  --footer-icon-hover-bg: rgba(250, 249, 245, 0.08);
+
+  --popover-bg: #252320;
+  --popover-bg-strong: #252320;
+  --popover-border: rgba(250, 249, 245, 0.08);
+  --popover-divider: rgba(250, 249, 245, 0.08);
+  --popover-text: #d4d2cc;
+  --text-strong: #faf9f5;
+  --popover-text-muted: #8e8b82;
+  --popover-text-icon: #a09d96;
+  --popover-item-hover: rgba(250, 249, 245, 0.08);
+  --popover-item-selected: rgba(250, 249, 245, 0.1);
+  --popover-shadow: rgba(0, 0, 0, 0.5);
+  --overlay-bg: rgba(0, 0, 0, 0.65);
+
+  --tooltip-bg: #252320;
+  --tooltip-text: #faf9f5;
+  --tooltip-shortcut: #a09d96;
+  --tooltip-border: rgba(250, 249, 245, 0.08);
+
+  --scrollbar-thumb: rgba(250, 249, 245, 0.18);
+  --scrollbar-thumb-hover: rgba(250, 249, 245, 0.32);
+}
