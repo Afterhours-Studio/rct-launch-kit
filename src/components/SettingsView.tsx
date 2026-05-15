@@ -272,28 +272,30 @@ export function SettingsView() {
         {/* ---- Footer: credit + reset + check update ---- */}
         <footer className="settings-footer">
           <div className="settings-footer__credit">
-            <div className="settings-footer__brand">
-              <img
-                src="/icon.png"
-                alt=""
-                className="settings-footer__icon"
-                aria-hidden
-              />
-              <span className="settings-footer__name">Dev Launch Kit</span>
-              {version && (
-                <span className="settings-footer__version">v{version}</span>
-              )}
-            </div>
-            <div className="settings-footer__author">
-              Crafted by{" "}
-              <button
-                type="button"
-                className="settings-footer__link"
-                onClick={() => openUrl(REPO_URL)}
-              >
-                <span>h1dr0n</span>
-                <ExternalLink size={10} strokeWidth={1.75} />
-              </button>
+            <img
+              src="/icon.png"
+              alt=""
+              className="settings-footer__icon"
+              aria-hidden
+            />
+            <div className="settings-footer__brand-text">
+              <div className="settings-footer__brand">
+                <span className="settings-footer__name">Dev Launch Kit</span>
+                {version && (
+                  <span className="settings-footer__version">v{version}</span>
+                )}
+              </div>
+              <div className="settings-footer__author">
+                Crafted by{" "}
+                <button
+                  type="button"
+                  className="settings-footer__link"
+                  onClick={() => openUrl(REPO_URL)}
+                >
+                  <span>h1dr0n</span>
+                  <ExternalLink size={10} strokeWidth={1.75} />
+                </button>
+              </div>
             </div>
           </div>
           <div className="settings-footer__actions">
