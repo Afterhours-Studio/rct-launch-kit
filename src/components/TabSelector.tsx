@@ -1,11 +1,11 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { LayoutGrid, Code2, Settings } from "lucide-react";
+import { LayoutGrid, Network, Settings } from "lucide-react";
 import { useView, type View } from "../stores/view";
 import "./tab-selector.css";
 
 const TABS = [
   { id: "stack", label: "Stack", Icon: LayoutGrid },
-  { id: "forge", label: "Forge", Icon: Code2 },
+  { id: "forge", label: "Port", Icon: Network },
   { id: "settings", label: "Settings", Icon: Settings },
 ] as const;
 

@@ -1,4 +1,5 @@
 mod commands;
+mod ports;
 mod projects;
 mod runner;
 mod settings;
@@ -61,6 +62,8 @@ pub fn run() {
             commands::save_settings,
             commands::reset_settings,
             commands::check_update,
+            commands::list_listening_ports,
+            commands::kill_port_process,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

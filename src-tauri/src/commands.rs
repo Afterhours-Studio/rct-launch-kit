@@ -1,5 +1,6 @@
+use crate::ports::{self, PortEntry};
 use crate::projects::{self, Project};
-use crate::runner;
+use crate::runner::{self, Runner};
 use crate::settings::{self, Settings, SettingsState};
 use serde::Serialize;
 use std::path::PathBuf;
@@ -39,6 +40,29 @@ pub async fn stop_project(app: AppHandle, project_id: String) -> Result<(), Stri
 #[tauri::command]
 pub async fn list_running(app: AppHandle) -> Result<Vec<String>, String> {
     Ok(runner::list_running(&app).await)
+}
+
+// ---------- Port Explorer ----------
+
+#[tauri::command]
+pub async fn list_listening_ports(app: AppHandle) -> Result<Vec<PortEntry>, String> {
+    // Collect PIDs owned by our launcher so the UI can mark them.
+    let runner = app.state::<Runner>();
+    let owned_pids: Vec<u32> = {
+        let runs = runner.runs.lock().await;
+        let mut acc = Vec::new();
+        for handle in runs.values() {
+            let pids = handle.active_pids.lock().await;
+            acc.extend(pids.values().copied());
+        }
+        acc
+    };
+    ports::list_listening(&owned_pids).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub async fn kill_port_process(pid: u32) -> Result<(), String> {
+    ports::kill_pid(pid).map_err(|e| e.to_string())
 }
 
 // ---------- Settings ----------

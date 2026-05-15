@@ -1,0 +1,482 @@
+/* Forge / Port Explorer — mirrors the visual language of SettingsView:
+ * display serif title + uppercase section headers + card-shaped section
+ * bodies with hairline-separated rows. */
+
+.forge-view {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 4px 4px 8px;
+  /* Page itself does not scroll — the dominant section scrolls inside. */
+  overflow: hidden;
+}
+
+/* ---- Page header ---- */
+.forge-view__head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 4px;
+}
+
+/* Page header mirrors the Stack content-header: small semibold name +
+ * muted description below. No display-serif treatment here — keeps the
+ * three tabs visually aligned at the top. */
+.forge-view__title {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.1;
+  margin: 0;
+  color: var(--text-strong);
+}
+
+.forge-view__subtitle {
+  font-size: 11px;
+  color: var(--popover-text-muted);
+  line-height: 1.2;
+  margin: 0;
+}
+
+/* ---- Section ---- */
+/* ---- Card (used by the Filter section) ----
+ * Outer raised card. Title bar sits INSIDE the card, mirroring the
+ * SETTINGS / PROCESS heads on the Stack tab's side panel. */
+.forge-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--sidebar-panel-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow-1), var(--hairline-inset);
+  padding-top: 12px;
+}
+
+.forge-card__head {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+}
+
+.forge-card__title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--popover-text-muted);
+}
+
+.forge-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 4px 12px 12px;
+}
+
+/* ---- Listening ports panel — mirrors LogView on the Stack tab ----
+ *   .forge-listing       outer card (cream-panel bg, raised)
+ *     .forge-listing__head   head bar — title + count + refresh on outer bg
+ *     .forge-listing__body   padded wrapper around the inner scroll well
+ *       .forge-listing__scroll  recessed canvas well, the data scrolls here
+ */
+.forge-listing {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--sidebar-panel-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow-1), var(--hairline-inset);
+  padding-top: 12px;
+}
+
+.forge-listing__head {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+}
+
+.forge-listing__title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--popover-text-muted);
+}
+
+.forge-listing__count {
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  color: var(--popover-text-muted);
+  opacity: 0.7;
+}
+
+.forge-listing__action {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--popover-text-muted);
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.forge-listing__action:hover:not(:disabled) {
+  background: var(--popover-item-hover);
+  color: var(--popover-text);
+}
+
+.forge-listing__action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.forge-listing__body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  padding: 8px 12px 12px;
+}
+
+.forge-listing__scroll {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  overflow-y: auto;
+  background: var(--content-bg);
+  border-radius: 6px;
+  box-shadow: var(--well-inset);
+}
+
+/* ---- Generic row (matches .sp-toggle / .sp-field pattern from Stack tab) ----
+ * No internal padding; the parent .forge-card__body provides spacing via
+ * gap + padding. No hairline between rows either — SidePanel sections on
+ * Stack don't use them. */
+.forge-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: transparent;
+  min-height: 32px;
+}
+
+/* Hairline separator only for port rows inside the listing well — it's a
+ * scannable data list, so per-row dividers help reading. */
+.port-row + .port-row {
+  border-top: 1px solid color-mix(in srgb, var(--popover-text) 8%, transparent);
+}
+
+.forge-row__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.forge-row__label {
+  font-size: 13px;
+  color: var(--text-strong);
+  font-weight: 500;
+}
+
+.forge-row__hint {
+  font-size: 11px;
+  color: var(--popover-text-muted);
+}
+
+.forge-row__control {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* ---- Search input ---- */
+.forge-search {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: 280px;
+  max-width: 100%;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 6px;
+  background: var(--content-bg);
+  color: var(--popover-text-muted);
+  box-shadow: var(--well-inset);
+}
+
+.forge-search__input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: inherit;
+  font-size: 12px;
+  color: var(--popover-text);
+  min-width: 0;
+}
+
+.forge-search__input::placeholder {
+  color: var(--popover-text-muted);
+}
+
+/* ---- Switch (reuse settings pattern) ---- */
+.forge-switch-wrap {
+  cursor: pointer;
+}
+
+.forge-switch {
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 16px;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--popover-text) 22%, transparent);
+  transition: background 0.15s ease;
+  vertical-align: middle;
+}
+
+.forge-switch.is-on {
+  background: #cc785c;
+}
+
+.forge-switch input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: inherit;
+}
+
+.forge-switch__knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow:
+    0 1px 2px rgba(20, 20, 19, 0.28),
+    0 0 0 0.5px rgba(20, 20, 19, 0.08);
+  transition: transform 0.15s ease;
+}
+
+.forge-switch.is-on .forge-switch__knob {
+  transform: translateX(14px);
+}
+
+/* ---- Port row — compact 2-line layout ----
+ *
+ *  ┌────────────────────────────────────────────────────────┐
+ *  │  1420   Vite                                       [×] │
+ *  │         vite.exe · PID 28104 · localhost               │
+ *  └────────────────────────────────────────────────────────┘
+ *
+ *  Port number sits alone in a fixed-width left column so different-length
+ *  ports stay aligned regardless of their binding address. The info column
+ *  carries everything else inline to make better use of the row's width.
+ */
+.port-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 14px;
+  background: transparent;
+}
+
+.port-row--owned {
+  background: color-mix(in srgb, #cc785c 6%, transparent);
+}
+
+/* Port number — alone in its column, no addr below it. */
+.port-row__number {
+  flex-shrink: 0;
+  width: 56px;
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--popover-text);
+  line-height: 1;
+  text-align: left;
+}
+
+/* Middle column — two compact lines: service + meta. */
+.port-row__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.port-row__top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.port-row__service {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--popover-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+.port-row__badge {
+  flex-shrink: 0;
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 9999px;
+  background: var(--popover-item-selected);
+  color: var(--popover-text-muted);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  line-height: 1.6;
+}
+
+.port-row__badge--owned {
+  background: rgba(204, 120, 92, 0.18);
+  color: #cc785c;
+}
+
+.port-row__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: var(--popover-text-muted);
+  min-width: 0;
+}
+
+.port-row__meta-name,
+.port-row__meta-pid,
+.port-row__meta-addr {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.port-row__meta-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.port-row__meta-dot {
+  flex-shrink: 0;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: var(--popover-text-muted);
+  opacity: 0.5;
+}
+
+/* Kill button — icon only, ghost by default, red on hover. */
+.port-row__kill {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--popover-text-muted);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    transform 0.12s ease;
+}
+
+.port-row__kill:hover:not(:disabled) {
+  background: #c64545;
+  color: #ffffff;
+}
+
+.port-row__kill:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.port-row__kill:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---- Empty state inside section body ---- */
+.forge-empty {
+  padding: 28px 16px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--popover-text-muted);
+}
+
+/* ---- Page footer ---- */
+.forge-view__foot {
+  font-size: 10px;
+  color: var(--popover-text-muted);
+  text-align: center;
+  opacity: 0.7;
+  padding: 0 0 4px;
+}
+
+/* ---- Spin ---- */
+.spin {
+  animation: forge-spin 0.9s linear infinite;
+}
+
+@keyframes forge-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---- Scrollbar (only on the listing's scroll area) ---- */
+.forge-listing__scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.forge-listing__scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.forge-listing__scroll::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.forge-listing__scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+  background-clip: padding-box;
+}
