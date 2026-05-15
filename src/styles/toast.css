@@ -1,0 +1,161 @@
+/* Sonner overrides — match the app's glass + cream/coral palette.
+ * Sonner exposes its theme via CSS variables on [data-sonner-toaster]; we
+ * remap them onto our existing tokens so toasts feel native to the app. */
+
+[data-sonner-toaster] {
+  --width: 360px;
+  --gap: 10px;
+  font-family: var(--font-sans) !important;
+}
+
+/* All toasts share the glass card look used by popovers / dropdowns. */
+[data-sonner-toast] {
+  background: var(--glass-bg-strong) !important;
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 10px !important;
+  box-shadow: var(--shadow-3), var(--hairline-inset) !important;
+  color: var(--popover-text) !important;
+  padding: 12px 14px !important;
+  font-size: 13px !important;
+  line-height: 1.45 !important;
+}
+
+/* Title text — slightly stronger than body to anchor the toast. */
+[data-sonner-toast] [data-title] {
+  color: var(--text-strong) !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+}
+
+[data-sonner-toast] [data-description] {
+  color: var(--popover-text-muted) !important;
+  font-size: 12px !important;
+  margin-top: 2px !important;
+}
+
+/* Type signal — coloured 3px left rail. Subtle but unambiguous, no
+ * heavy bg tints that would clash with the glass look. */
+[data-sonner-toast][data-type] {
+  position: relative;
+  padding-left: 16px !important;
+}
+
+[data-sonner-toast][data-type]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background: var(--popover-text-muted);
+}
+
+[data-sonner-toast][data-type="success"]::before {
+  background: #5db872;
+}
+[data-sonner-toast][data-type="error"]::before {
+  background: #c64545;
+}
+[data-sonner-toast][data-type="warning"]::before {
+  background: #d4a017;
+}
+[data-sonner-toast][data-type="info"]::before {
+  background: #cc785c;
+}
+
+/* Default sonner icons — recolour to match the rail. */
+[data-sonner-toast] [data-icon] svg {
+  width: 16px;
+  height: 16px;
+}
+
+[data-sonner-toast][data-type="success"] [data-icon] {
+  color: #5db872;
+}
+[data-sonner-toast][data-type="error"] [data-icon] {
+  color: #c64545;
+}
+[data-sonner-toast][data-type="warning"] [data-icon] {
+  color: #d4a017;
+}
+[data-sonner-toast][data-type="info"] [data-icon] {
+  color: #cc785c;
+}
+
+/* Action / dismiss buttons inside a toast. */
+[data-sonner-toast] [data-button] {
+  background: var(--content-bg) !important;
+  color: var(--popover-text) !important;
+  border: none !important;
+  border-radius: 5px !important;
+  padding: 4px 10px !important;
+  font-family: var(--font-sans) !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  box-shadow: var(--shadow-1), var(--hairline-inset) !important;
+  transition:
+    background 0.15s ease,
+    box-shadow 0.18s ease,
+    transform 0.12s ease !important;
+}
+
+[data-sonner-toast] [data-button]:hover {
+  background: var(--popover-item-hover) !important;
+  box-shadow: var(--shadow-2), var(--hairline-inset) !important;
+}
+
+[data-sonner-toast] [data-button]:active {
+  transform: translateY(1px);
+}
+
+[data-sonner-toast] [data-cancel] {
+  color: var(--popover-text-muted) !important;
+}
+
+/* Close (×) — round button pinned to the RIGHT side of the toast.
+ * Sonner places this top-left by default; we relocate + restyle so it's
+ * always visible and one-click reachable. */
+[data-sonner-toast] [data-close-button] {
+  position: absolute !important;
+  top: 50% !important;
+  right: 10px !important;
+  left: auto !important;
+  transform: translateY(-50%) !important;
+  width: 20px !important;
+  height: 20px !important;
+  padding: 0 !important;
+  border-radius: 9999px !important;
+  background: var(--popover-item-selected) !important;
+  border: none !important;
+  color: var(--popover-text-muted) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  opacity: 1 !important;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.12s ease !important;
+}
+
+[data-sonner-toast] [data-close-button]:hover {
+  background: var(--popover-text-muted) !important;
+  color: var(--popover-bg-strong) !important;
+}
+
+[data-sonner-toast] [data-close-button]:active {
+  transform: translateY(-50%) scale(0.92) !important;
+}
+
+/* Sonner's close icon is a small svg/×; ensure it's centered. */
+[data-sonner-toast] [data-close-button] svg {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+/* Reserve space on the right of the toast content so close button doesn't
+ * overlap the title/description text. */
+[data-sonner-toast] {
+  padding-right: 36px !important;
+}

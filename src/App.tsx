@@ -11,9 +11,12 @@ import {
 import { attachThemeBridge } from "./lib/theme-bridge";
 import { useProjects } from "./stores/projects";
 import { useSettings } from "./stores/settings";
+import { useTheme } from "./stores/theme";
 import "./App.css";
 
 function App() {
+  const theme = useTheme((s) => s.theme);
+
   useEffect(() => {
     let cancelled = false;
     let unlistenEvents: (() => void) | undefined;
@@ -90,7 +93,18 @@ function App() {
       <TitleBar />
       <Sidebar />
       <Content />
-      <Toaster theme="dark" position="bottom-right" />
+      <Toaster
+        theme={theme}
+        position="bottom-right"
+        offset={16}
+        gap={10}
+        visibleToasts={4}
+        closeButton
+        toastOptions={{
+          className: "app-toast",
+          duration: 4000,
+        }}
+      />
     </>
   );
 }

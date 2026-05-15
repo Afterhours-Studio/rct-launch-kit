@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./styles/theme.css";
+@import "./styles/toast.css";
 
 /* ---- Typography stack per DESIGN.md ----
  * Body / UI: humanist sans (StyreneB → Inter → system fallbacks).
