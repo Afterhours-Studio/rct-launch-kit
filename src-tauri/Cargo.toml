@@ -25,4 +25,11 @@ tokio = { version = "1", features = ["full"] }
 anyhow = "1"
 sysinfo = "0.32"
 reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json"] }
+# netstat2 0.9.1 doesn't compile against modern libc on Linux (reads
+# `tcp_info.state` instead of `tcpi_state` and re-globs `__be16`). Use it
+# on Windows/macOS where it still works, and read /proc directly on Linux.
+[target.'cfg(not(target_os = "linux"))'.dependencies]
 netstat2 = "0.9"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+procfs = "0.17"
