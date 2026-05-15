@@ -50,7 +50,7 @@ export function TitleBar() {
               onClick={toggleMenu}
               aria-label="Menu"
             >
-              <Menu size={16} strokeWidth={2.25} />
+              <Menu size={16} strokeWidth={1.75} />
             </button>
           </Tooltip>
           <Tooltip label="Collapse sidebar" shortcut="Ctrl+B">
@@ -59,7 +59,7 @@ export function TitleBar() {
               onClick={toggleSidebar}
               aria-label="Toggle sidebar"
             >
-              <PanelLeft size={16} strokeWidth={2.25} />
+              <PanelLeft size={16} strokeWidth={1.75} />
             </button>
           </Tooltip>
           <Tooltip label="Search" shortcut="Ctrl+K">
@@ -68,7 +68,7 @@ export function TitleBar() {
               onClick={() => setPaletteOpen(true)}
               aria-label="Search"
             >
-              <Search size={16} strokeWidth={2.25} />
+              <Search size={16} strokeWidth={1.75} />
             </button>
           </Tooltip>
           <div className="titlebar-sep" />
@@ -79,7 +79,7 @@ export function TitleBar() {
               disabled={!canGoBack}
               aria-label="Back"
             >
-              <ArrowLeft size={16} strokeWidth={2.25} />
+              <ArrowLeft size={16} strokeWidth={1.75} />
             </button>
           </Tooltip>
           <Tooltip label="Forward">
@@ -89,7 +89,7 @@ export function TitleBar() {
               disabled={!canGoForward}
               aria-label="Forward"
             >
-              <ArrowRight size={16} strokeWidth={2.25} />
+              <ArrowRight size={16} strokeWidth={1.75} />
             </button>
           </Tooltip>
         </div>

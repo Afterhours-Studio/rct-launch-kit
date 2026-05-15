@@ -235,7 +235,7 @@ export function SettingsView() {
                 onClick={() => openUrl(REPO_URL)}
               >
                 <span>h1dr0n</span>
-                <ExternalLink size={10} strokeWidth={2.25} />
+                <ExternalLink size={10} strokeWidth={1.75} />
               </button>
             </div>
           </div>
@@ -252,9 +252,9 @@ export function SettingsView() {
               }
             >
               {resetting ? (
-                <Loader2 size={13} strokeWidth={2.25} className="spin" />
+                <Loader2 size={13} strokeWidth={1.75} className="spin" />
               ) : (
-                <RotateCcw size={13} strokeWidth={2.25} />
+                <RotateCcw size={13} strokeWidth={1.75} />
               )}
               <span>Reset defaults</span>
             </button>
@@ -265,9 +265,9 @@ export function SettingsView() {
               disabled={checking}
             >
               {checking ? (
-                <Loader2 size={13} strokeWidth={2.25} className="spin" />
+                <Loader2 size={13} strokeWidth={1.75} className="spin" />
               ) : (
-                <RefreshCw size={13} strokeWidth={2.25} />
+                <RefreshCw size={13} strokeWidth={1.75} />
               )}
               <span>Check for updates</span>
             </button>
@@ -404,7 +404,7 @@ function UpdateBanner({
       : CheckCircle2;
   return (
     <div className={cls}>
-      <Icon size={14} strokeWidth={2.25} />
+      <Icon size={14} strokeWidth={1.75} />
       <div className="settings-update__text">
         {info.hasUpdate && info.latest ? (
           <>

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Trash2, Pause, Play } from "lucide-react";
+import { Pause, Play, Trash2 } from "lucide-react";
 import { useLogs } from "../stores/logs";
 import { useProjects } from "../stores/projects";
 import { useSettings } from "../stores/settings";
@@ -58,9 +58,9 @@ export function LogView() {
             title={autoscroll ? "Pause auto-scroll" : "Resume auto-scroll"}
           >
             {autoscroll ? (
-              <Pause size={12} strokeWidth={2.25} />
+              <Pause size={12} strokeWidth={1.75} />
             ) : (
-              <Play size={12} strokeWidth={2.25} fill="currentColor" />
+              <Play size={12} strokeWidth={1.75} />
             )}
           </button>
           <button
@@ -69,7 +69,7 @@ export function LogView() {
             onClick={() => clearLogs(projectId)}
             title="Clear"
           >
-            <Trash2 size={12} strokeWidth={2.25} />
+            <Trash2 size={12} strokeWidth={1.75} />
           </button>
         </div>
       </div>

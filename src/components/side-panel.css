@@ -3,6 +3,9 @@
   flex-direction: column;
   height: 100%;
   min-height: 0;
+  /* 12px top so the SETTINGS head sits inside the pane's padding rather
+   * than at top: 0. Sides + bottom padding live on .sp-head / .sp-body. */
+  padding-top: 12px;
 }
 
 .sp-section {
@@ -31,7 +34,8 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  height: 28px;
+  /* No fixed height — head sizes to its tallest child so visual top gap
+   * equals .side-panel's padding-top (12px) without centering inflation. */
   padding: 0 12px;
 }
 
@@ -195,7 +199,7 @@
   padding: 6px 8px;
   border-radius: 5px;
   background: var(--content-bg);
-  border: 1px solid var(--popover-border);
+  box-shadow: var(--well-inset);
   min-width: 0;
   min-height: 0;
   text-align: center;

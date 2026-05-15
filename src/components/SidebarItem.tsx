@@ -61,7 +61,7 @@ export function SidebarItem({ name, status }: SidebarItemProps) {
           onClick={onMoreClick}
           aria-label="More actions"
         >
-          <MoreVertical size={14} strokeWidth={2} />
+          <MoreVertical size={14} strokeWidth={1.75} />
         </button>
       </div>
       <ContextMenu

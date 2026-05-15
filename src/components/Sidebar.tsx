@@ -171,7 +171,7 @@ export function Sidebar() {
                   type="button"
                   onClick={newDraft}
                 >
-                  <Plus size={14} strokeWidth={2.25} />
+                  <Plus size={14} strokeWidth={1.75} />
                   <span>New project</span>
                 </button>
               </div>
@@ -205,7 +205,7 @@ export function Sidebar() {
                         aria-label="More actions"
                         onClick={(e) => openMenuFromButton(e, p.id)}
                       >
-                        <MoreVertical size={14} strokeWidth={2} />
+                        <MoreVertical size={14} strokeWidth={1.75} />
                       </button>
                     </div>
                   );
@@ -221,9 +221,9 @@ export function Sidebar() {
               aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
             >
               {theme === "light" ? (
-                <Moon size={14} strokeWidth={2} />
+                <Moon size={14} strokeWidth={1.75} />
               ) : (
-                <Sun size={14} strokeWidth={2} />
+                <Sun size={14} strokeWidth={1.75} />
               )}
             </button>
           </div>

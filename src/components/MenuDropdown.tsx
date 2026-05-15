@@ -109,7 +109,7 @@ export function MenuDropdown({ open, onClose, anchorX, anchorY }: MenuDropdownPr
               onClick={() => setOpenGroup(openGroup === label ? null : label)}
             >
               <span>{label}</span>
-              <ChevronRight size={14} strokeWidth={2} />
+              <ChevronRight size={14} strokeWidth={1.75} />
 
               {openGroup === label &&
                 createPortal(

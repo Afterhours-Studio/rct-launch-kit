@@ -50,18 +50,64 @@
   /* Scrollbar */
   --scrollbar-thumb: rgba(20, 20, 19, 0.18);
   --scrollbar-thumb-hover: rgba(20, 20, 19, 0.32);
+
+  /* Elevation — multi-layer shadows for "lit from above" depth.
+   * level-1: rest cards, level-2: hover/active cards, level-3: floating
+   * popovers, level-4: command palette / modal. */
+  --shadow-1:
+    0 1px 1px rgba(20, 20, 19, 0.04),
+    0 1px 2px rgba(20, 20, 19, 0.04);
+  --shadow-2:
+    0 1px 1px rgba(20, 20, 19, 0.05),
+    0 2px 4px rgba(20, 20, 19, 0.06),
+    0 8px 16px rgba(20, 20, 19, 0.04);
+  --shadow-3:
+    0 1px 1px rgba(20, 20, 19, 0.06),
+    0 4px 8px rgba(20, 20, 19, 0.06),
+    0 12px 24px rgba(20, 20, 19, 0.08),
+    0 24px 48px rgba(20, 20, 19, 0.06);
+  --shadow-4:
+    0 1px 1px rgba(20, 20, 19, 0.08),
+    0 4px 12px rgba(20, 20, 19, 0.10),
+    0 16px 40px rgba(20, 20, 19, 0.14),
+    0 32px 80px rgba(20, 20, 19, 0.10);
+
+  /* Inset hairline (lit-from-above subtle stroke). */
+  --hairline-inset:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+
+  /* Sunken well — single soft inward glow from all edges. No 1px ring,
+   * since bg contrast already defines the box boundary; the ring would
+   * stack with the blur to read as a doubled inner border. */
+  --well-inset:
+    inset 0 0 8px rgba(20, 20, 19, 0.08);
+  --well-inset-strong:
+    inset 0 0 10px rgba(20, 20, 19, 0.12);
+
+  /* Coral glow for active/running visuals. */
+  --glow-coral:
+    0 0 0 4px rgba(204, 120, 92, 0.16),
+    0 0 24px rgba(204, 120, 92, 0.28);
+
+  /* Glassmorphism: translucent panel + heavy backdrop blur. */
+  --glass-bg: rgba(250, 249, 245, 0.62);
+  --glass-bg-strong: rgba(250, 249, 245, 0.78);
+  --glass-border: rgba(255, 255, 255, 0.35);
+  --glass-blur: blur(24px) saturate(180%);
 }
 
 :root[data-theme="dark"] {
-  --sidebar-bg: #1f1e1b;
+  /* Brightened ~+10 lightness so inset shadows actually register and the
+   * surface reads as warm dark navy, not pitch black. */
+  --sidebar-bg: #2a2724;
   --sidebar-border: rgba(250, 249, 245, 0.08);
-  --sidebar-panel-bg: #252320;
-  --content-bg: #1f1e1b;
+  --sidebar-panel-bg: #322f2b;
+  --content-bg: #2a2724;
   --content-border: rgba(250, 249, 245, 0.08);
   --resize-handle: rgba(250, 249, 245, 0.25);
 
-  --tab-container-bg: #181715;
-  --tab-active-bg: #252320;
+  --tab-container-bg: #211f1c;
+  --tab-active-bg: #322f2b;
   --tab-active-border: rgba(250, 249, 245, 0.08);
   --tab-active-text: #cc785c;
   --tab-text: #a09d96;
@@ -71,8 +117,8 @@
   --footer-icon: #a09d96;
   --footer-icon-hover-bg: rgba(250, 249, 245, 0.08);
 
-  --popover-bg: #252320;
-  --popover-bg-strong: #252320;
+  --popover-bg: #322f2b;
+  --popover-bg-strong: #322f2b;
   --popover-border: rgba(250, 249, 245, 0.08);
   --popover-divider: rgba(250, 249, 245, 0.08);
   --popover-text: #d4d2cc;
@@ -91,4 +137,40 @@
 
   --scrollbar-thumb: rgba(250, 249, 245, 0.18);
   --scrollbar-thumb-hover: rgba(250, 249, 245, 0.32);
+
+  /* Stronger shadows on dark — soft black bleeds nicely against deep navy. */
+  --shadow-1:
+    0 1px 1px rgba(0, 0, 0, 0.18),
+    0 1px 2px rgba(0, 0, 0, 0.12);
+  --shadow-2:
+    0 1px 1px rgba(0, 0, 0, 0.18),
+    0 2px 4px rgba(0, 0, 0, 0.18),
+    0 8px 16px rgba(0, 0, 0, 0.16);
+  --shadow-3:
+    0 1px 1px rgba(0, 0, 0, 0.22),
+    0 4px 8px rgba(0, 0, 0, 0.22),
+    0 12px 24px rgba(0, 0, 0, 0.28),
+    0 24px 48px rgba(0, 0, 0, 0.22);
+  --shadow-4:
+    0 1px 1px rgba(0, 0, 0, 0.30),
+    0 4px 12px rgba(0, 0, 0, 0.36),
+    0 16px 40px rgba(0, 0, 0, 0.46),
+    0 32px 80px rgba(0, 0, 0, 0.36);
+
+  --hairline-inset:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+  --well-inset:
+    inset 0 0 8px rgba(0, 0, 0, 0.36);
+  --well-inset-strong:
+    inset 0 0 10px rgba(0, 0, 0, 0.46);
+
+  --glow-coral:
+    0 0 0 4px rgba(204, 120, 92, 0.18),
+    0 0 28px rgba(204, 120, 92, 0.40);
+
+  --glass-bg: rgba(42, 39, 36, 0.62);
+  --glass-bg-strong: rgba(42, 39, 36, 0.78);
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --glass-blur: blur(24px) saturate(160%);
 }

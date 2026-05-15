@@ -164,7 +164,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
           >
             <Command label="Command palette" className="command">
               <div className="command__input-wrap">
-                <Search size={16} strokeWidth={2} />
+                <Search size={16} strokeWidth={1.75} />
                 <Command.Input
                   placeholder="Search projects, run actions, navigate..."
                   className="command__input"

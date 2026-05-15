@@ -10,15 +10,22 @@
  * available substitutes that hit the same proportions. */
 :root {
   --font-sans:
-    "StyreneB", "Inter", "Söhne", -apple-system, BlinkMacSystemFont,
+    "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont,
     "Segoe UI Variable", "Segoe UI", Roboto, "Helvetica Neue", Arial,
     sans-serif;
   --font-display:
-    "Copernicus", "Tiempos Headline", "Cormorant Garamond", "EB Garamond",
-    Garamond, "Playfair Display", "Times New Roman", serif;
+    "Cormorant Garamond", "Tiempos Headline", "EB Garamond", Garamond,
+    "Times New Roman", serif;
   --font-mono:
-    "JetBrains Mono", "SF Mono", "Cascadia Code", "Consolas",
-    ui-monospace, monospace;
+    "JetBrains Mono Variable", "JetBrains Mono", "SF Mono", "Cascadia Code",
+    Consolas, ui-monospace, monospace;
+}
+
+html,
+body {
+  font-family: var(--font-sans);
+  font-feature-settings: "cv11", "ss01", "ss03"; /* Inter humanist tweaks */
+  font-variant-numeric: tabular-nums;
 }
 
 html,

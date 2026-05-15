@@ -14,11 +14,13 @@
 }
 
 .command {
-  background: var(--popover-bg-strong);
-  border: 1px solid var(--popover-border);
-  border-radius: 12px;
+  background: var(--glass-bg-strong);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 24px 48px var(--popover-shadow);
+  box-shadow: var(--shadow-4), var(--hairline-inset);
 }
 
 .command__input-wrap {

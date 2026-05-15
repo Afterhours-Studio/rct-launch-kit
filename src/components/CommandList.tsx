@@ -83,7 +83,7 @@ export function CommandList() {
                         removeLane(l.id);
                       }}
                     >
-                      <X size={9} strokeWidth={2.5} />
+                      <X size={8} strokeWidth={1.75} />
                     </button>
                   )}
                 </div>
@@ -97,7 +97,7 @@ export function CommandList() {
                 title="Add parallel lane"
                 aria-label="Add lane"
               >
-                <Plus size={11} strokeWidth={2.5} />
+                <Plus size={10} strokeWidth={1.75} />
               </button>
             )}
           </div>
@@ -121,7 +121,7 @@ export function CommandList() {
               if (picked) updateLane(activeLaneId, { path: picked });
             }}
           >
-            <Folder size={13} strokeWidth={2.25} />
+            <Folder size={13} strokeWidth={1.75} />
             <span>Browse</span>
           </button>
         </div>
@@ -131,7 +131,7 @@ export function CommandList() {
         <div className="cmd-list__section-head">
           <span className="cmd-list__label">Commands (sequential)</span>
           <button className="cmd-list__add" type="button" onClick={addCommand}>
-            <Plus size={12} strokeWidth={2.5} />
+            <Plus size={12} strokeWidth={1.75} />
             <span>Add</span>
           </button>
         </div>
@@ -215,7 +215,7 @@ function SortableRow({
         {...attributes}
         {...listeners}
       >
-        <GripVertical size={14} strokeWidth={2} />
+        <GripVertical size={14} strokeWidth={1.75} />
       </button>
       <span className="cmd-row__index">{idx + 1}</span>
       <input
@@ -246,7 +246,7 @@ function SortableRow({
         onClick={onRemove}
         disabled={!canRemove}
       >
-        <X size={13} strokeWidth={2.25} />
+        <X size={13} strokeWidth={1.75} />
       </button>
     </div>
   );

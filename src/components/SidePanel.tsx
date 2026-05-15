@@ -116,10 +116,10 @@ export function SidePanel() {
         </header>
         <div className="sp-body">
           <div className="sp-stats">
-            <Stat icon={<Hash size={10} strokeWidth={2.25} />} label="PID" value={fmtPid(stats.pid, stats.pidCount)} />
-            <Stat icon={<Cpu size={10} strokeWidth={2.25} />} label="CPU" value={fmtCpu(stats.cpuPct)} />
-            <Stat icon={<MemoryStick size={10} strokeWidth={2.25} />} label="MEM" value={fmtMem(stats.memMb)} />
-            <Stat icon={<Timer size={10} strokeWidth={2.25} />} label="UP" value={fmtUp(stats.uptimeMs)} />
+            <Stat icon={<Hash size={10} strokeWidth={1.75} />} label="PID" value={fmtPid(stats.pid, stats.pidCount)} />
+            <Stat icon={<Cpu size={10} strokeWidth={1.75} />} label="CPU" value={fmtCpu(stats.cpuPct)} />
+            <Stat icon={<MemoryStick size={10} strokeWidth={1.75} />} label="MEM" value={fmtMem(stats.memMb)} />
+            <Stat icon={<Timer size={10} strokeWidth={1.75} />} label="UP" value={fmtUp(stats.uptimeMs)} />
           </div>
         </div>
       </section>

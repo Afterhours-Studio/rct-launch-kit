@@ -116,7 +116,7 @@ export function ProjectView() {
               onClick={openFolder}
               disabled={!canOpenFolder}
             >
-              <FolderOpen size={14} strokeWidth={2.25} />
+              <FolderOpen size={14} strokeWidth={1.75} />
             </button>
           </Tooltip>
           <Tooltip label="Discard changes">
@@ -127,7 +127,7 @@ export function ProjectView() {
               onClick={discard}
               disabled={!canDiscard}
             >
-              <RotateCcw size={14} strokeWidth={2.25} />
+              <RotateCcw size={14} strokeWidth={1.75} />
             </button>
           </Tooltip>
           <div className="content-header__sep" />
@@ -139,7 +139,7 @@ export function ProjectView() {
               onClick={saveDraft}
               disabled={!canSave}
             >
-              <Save size={13} strokeWidth={2.25} />
+              <Save size={13} strokeWidth={1.75} />
               <span>Save</span>
               {dirty && <span className="content-save-btn__dot" />}
             </button>
@@ -153,9 +153,9 @@ export function ProjectView() {
               disabled={!isRunning && !canRun}
             >
               {isRunning ? (
-                <Square size={12} strokeWidth={2.5} fill="currentColor" />
+                <Square size={12} strokeWidth={1.75} fill="currentColor" />
               ) : (
-                <Play size={14} strokeWidth={2.25} fill="currentColor" />
+                <Play size={14} strokeWidth={1.75} fill="currentColor" />
               )}
               <span>{isRunning ? "Stop" : "Run"}</span>
             </button>

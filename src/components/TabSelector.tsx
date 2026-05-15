@@ -34,7 +34,7 @@ export function TabSelector() {
               />
             )}
             <motion.span layout className="tab-selector__content">
-              <Icon size={14} strokeWidth={2} />
+              <Icon size={14} strokeWidth={1.75} />
               <AnimatePresence initial={false}>
                 {isActive && (
                   <motion.span
