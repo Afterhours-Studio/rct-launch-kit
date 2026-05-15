@@ -1,7 +1,7 @@
 {
-  "version": "0.0.2",
+  "version": "0.0.4",
   "notes": "Initial manifest — populated by CI on each tagged release.",
-  "pub_date": "2026-05-15T09:42:19.265Z",
+  "pub_date": "2026-05-15T10:46:16.905Z",
   "platforms": {
     "windows-x86_64": {
       "url": "",
@@ -12,12 +12,12 @@
       "signature": ""
     },
     "darwin-x86_64": {
-      "url": "https://github.com/Afterhours-Studio/rct-launch-kit/releases/download/develop-v0.0.2/dev-launch-kit-0.0.2-macos-x64-updater.app.tar.gz",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcW5OQXBqeHpqR2hkMmFuemhWQWFQVVIySkdBb2piVFBwV0QvaVlGNXllR1NpMy9Dam5SREpBeldtN0dUQ2NOM2Qxa1FHdE1tSmtGRTNVV1N6K00wU1pidmhDclAvOGdFPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc4ODM3OTY5CWZpbGU6RGV2IExhdW5jaCBLaXQuYXBwLnRhci5negpKR0Z1MnNkaE9ab2xIanBsczZvYW9Fc3JmZjV3SkZjK2hFK01oSWdXblMyYlhjT29rWG9Zd3BnTWltSWZjMlBLL041TlJQVmIxb3dLQXdLQlhTVEREUT09Cg=="
+      "url": "https://github.com/Afterhours-Studio/rct-launch-kit/releases/download/develop-v0.0.4/dev-launch-kit-0.0.4-macos-x64-updater.app.tar.gz",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcW5OQXBqeHpqR21YYVNnUWs3aUJMaFZNamxuRWZTTGxidmlwZmNSUklUMU13WlRlU3pHcEplL3drMTRtTXlkNnA3KzZZQkJWZ0d0TlZlOWdwK1ZUOVMwN1cxN01DNWdJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc4ODQxODQxCWZpbGU6RGV2IExhdW5jaCBLaXQuYXBwLnRhci5negpKRkw4dlFmdjB2cC9Sdk9sZWQxSGtRWUR6clI5ZUxFRzFIVFZNVzAyRFFaMzVWRmRrbTF0OTU0b1FCZ2M0SEJIRzFPajZlK0N6L29XdnhKbUxPb2NEQT09Cg=="
     },
     "darwin-aarch64": {
-      "url": "https://github.com/Afterhours-Studio/rct-launch-kit/releases/download/develop-v0.0.2/dev-launch-kit-0.0.2-macos-arm64-updater.app.tar.gz",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcW5OQXBqeHpqR2sxMjhQallnUDJBMGR0TllzZ1UvcmVNd3B2angzVTZEODlZbTg3TEhRZm55M3lVQWw2YWwyU0l2M2hNNG5EeE9tYXlmMXE4cHlQWGExRmRMRzZNRkFvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc4ODM3NjU0CWZpbGU6RGV2IExhdW5jaCBLaXQuYXBwLnRhci5negppNTNwWHArRGRQNlpiZXljdFJ1VzNlancrSUt2eW5HQnBkeEw0T3ZxS2lGUG9YZXpwZmsvSGNZU2xvNm1wVVFnbHhzSDBGUDBXWW0vTHNUSVJIOGdCZz09Cg=="
+      "url": "https://github.com/Afterhours-Studio/rct-launch-kit/releases/download/develop-v0.0.4/dev-launch-kit-0.0.4-macos-arm64-updater.app.tar.gz",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcW5OQXBqeHpqR2pjMXVVeVdzazl0Tm5VWFBPT3BhSGNBZTk5UnVhSHorc3gvQkJhWWt6SXYrMzVYS2tzNWo1Njgxekg5RkZYdVpMbndITU9QY3MxRFVVRFZTRTIyRWdBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc4ODQxNjkxCWZpbGU6RGV2IExhdW5jaCBLaXQuYXBwLnRhci5negpRRFpoVVk4QVJEc0Y0UnJzVm4yQWNIeit4RU82Vy9YZzBZVk5qSUVrSUFBSVg0eDZ4NExCTnVneDk3UDJPcytXU0RreHZXWThTMndEVWQ0NTkwY01CUT09Cg=="
     }
   }
 }
