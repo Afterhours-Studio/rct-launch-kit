@@ -156,8 +156,10 @@ fn enumerate_listeners() -> anyhow::Result<Vec<RawListener>> {
 pub fn kill_pid(pid: u32) -> anyhow::Result<()> {
     #[cfg(windows)]
     {
+        use std::os::windows::process::CommandExt;
         let status = std::process::Command::new("taskkill")
             .args(["/F", "/T", "/PID", &pid.to_string()])
+            .creation_flags(0x0800_0000)
             .stdin(Stdio::null())
             .stdout(Stdio::null())
             .stderr(Stdio::null())

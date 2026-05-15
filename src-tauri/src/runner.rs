@@ -195,14 +195,24 @@ fn make_command(cmd: &str, cwd: &str, win_shell: WindowsShell) -> Command {
         // New process group → kill -- -PID kills the whole tree.
         c.process_group(0);
     }
+    #[cfg(windows)]
+    {
+        // CREATE_NO_WINDOW: suppress the flash of a console window when we
+        // spawn a child via cmd.exe / powershell.exe. The app itself runs
+        // under windows_subsystem="windows" so it has no console to inherit,
+        // and without this flag Windows allocates a fresh one per child.
+        c.creation_flags(0x0800_0000);
+    }
     c
 }
 
 fn kill_tree(pid: u32, kill_timeout_ms: u32) {
     #[cfg(windows)]
     {
+        use std::os::windows::process::CommandExt;
         let _ = std::process::Command::new("taskkill")
             .args(["/F", "/T", "/PID", &pid.to_string()])
+            .creation_flags(0x0800_0000)
             .stdin(Stdio::null())
             .stdout(Stdio::null())
             .stderr(Stdio::null())
