@@ -39,6 +39,8 @@ export const api = {
     invoke<void>("save_settings", { settings }),
   resetSettings: () => invoke<Settings>("reset_settings"),
   checkUpdate: () => invoke<UpdateInfo>("check_update"),
+  quitApp: () => invoke<void>("quit_app"),
+  hideToTray: () => invoke<void>("hide_to_tray"),
 };
 
 export async function pickDirectory(): Promise<string | null> {

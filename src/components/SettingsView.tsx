@@ -22,6 +22,7 @@ import {
   type Settings,
   type Theme,
   type WindowsShell,
+  type CloseBehavior,
   DEFAULT_SETTINGS,
 } from "../stores/settings";
 import "./settings-view.css";
@@ -224,6 +225,33 @@ export function SettingsView() {
           </Row>
         </Section>
 
+        <Section title="System" hint="Boot-time and window-close behavior.">
+          <Row
+            label="Start with system"
+            hint="Launch automatically when you sign in."
+          >
+            <Toggle
+              checked={settings.startWithSystem}
+              onChange={(v) => update({ startWithSystem: v })}
+            />
+          </Row>
+          <Row
+            label="When closing the window"
+            hint="What the × button does."
+          >
+            <Segmented<CloseBehavior>
+              value={settings.closeBehavior}
+              onChange={(v) => update({ closeBehavior: v })}
+              ariaLabel="Close behavior"
+              options={[
+                { value: "ask", label: "Ask" },
+                { value: "hide", label: "Background" },
+                { value: "quit", label: "Quit" },
+              ]}
+            />
+          </Row>
+        </Section>
+
         <Section title="Updates" hint="Stay current with the latest release.">
           <Row label="Auto-check on startup">
             <Toggle
@@ -317,7 +345,9 @@ function isDefault(s: Settings): boolean {
     s.confirmStop === DEFAULT_SETTINGS.confirmStop &&
     s.windowsShell === DEFAULT_SETTINGS.windowsShell &&
     s.killTimeoutMs === DEFAULT_SETTINGS.killTimeoutMs &&
-    s.autoCheckUpdates === DEFAULT_SETTINGS.autoCheckUpdates
+    s.autoCheckUpdates === DEFAULT_SETTINGS.autoCheckUpdates &&
+    s.startWithSystem === DEFAULT_SETTINGS.startWithSystem &&
+    s.closeBehavior === DEFAULT_SETTINGS.closeBehavior
   );
 }
 

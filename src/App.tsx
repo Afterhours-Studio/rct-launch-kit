@@ -1,8 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Toaster } from "sonner";
+import { listen } from "@tauri-apps/api/event";
 import { TitleBar } from "./components/TitleBar";
 import { Sidebar } from "./components/Sidebar";
 import { Content } from "./components/Content";
+import { CloseConfirmModal } from "./components/CloseConfirmModal";
 import {
   api,
   attachBackendListeners,
@@ -16,6 +18,7 @@ import "./App.css";
 
 function App() {
   const theme = useTheme((s) => s.theme);
+  const [closePromptOpen, setClosePromptOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -40,6 +43,15 @@ function App() {
       }
     };
     document.addEventListener("contextmenu", onContextMenu);
+
+    // The Rust close handler emits this event when closeBehavior === "ask".
+    let unlistenClose: (() => void) | undefined;
+    listen("app://close-requested", () => setClosePromptOpen(true)).then(
+      (u) => {
+        if (cancelled) u();
+        else unlistenClose = u;
+      },
+    );
 
     (async () => {
       const u = await attachBackendListeners();
@@ -85,6 +97,7 @@ function App() {
       unsubTheme();
       document.removeEventListener("contextmenu", onContextMenu);
       unlistenEvents?.();
+      unlistenClose?.();
     };
   }, []);
 
@@ -93,6 +106,10 @@ function App() {
       <TitleBar />
       <Sidebar />
       <Content />
+      <CloseConfirmModal
+        open={closePromptOpen}
+        onClose={() => setClosePromptOpen(false)}
+      />
       <Toaster
         theme={theme}
         position="bottom-right"

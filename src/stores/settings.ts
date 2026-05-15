@@ -2,6 +2,7 @@ import { create } from "zustand";
 
 export type Theme = "light" | "dark" | "system";
 export type WindowsShell = "cmd" | "powershell";
+export type CloseBehavior = "ask" | "quit" | "hide";
 
 export interface Settings {
   theme: Theme;
@@ -13,6 +14,8 @@ export interface Settings {
   windowsShell: WindowsShell;
   killTimeoutMs: number;
   autoCheckUpdates: boolean;
+  startWithSystem: boolean;
+  closeBehavior: CloseBehavior;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -25,6 +28,8 @@ export const DEFAULT_SETTINGS: Settings = {
   windowsShell: "cmd",
   killTimeoutMs: 300,
   autoCheckUpdates: false,
+  startWithSystem: false,
+  closeBehavior: "ask",
 };
 
 interface SettingsState {

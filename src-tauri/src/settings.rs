@@ -36,6 +36,18 @@ pub struct Settings {
     pub kill_timeout_ms: u32,
     #[serde(rename = "autoCheckUpdates")]
     pub auto_check_updates: bool,
+    #[serde(rename = "startWithSystem", default)]
+    pub start_with_system: bool,
+    /// What to do when the user clicks the window's × button.
+    /// "ask"  → frontend pops a modal asking quit-vs-minimize.
+    /// "quit" → exit the process.
+    /// "hide" → hide the window; tray icon stays alive.
+    #[serde(rename = "closeBehavior", default = "default_close_behavior")]
+    pub close_behavior: String,
+}
+
+fn default_close_behavior() -> String {
+    "ask".to_string()
 }
 
 impl Default for Settings {
@@ -50,6 +62,8 @@ impl Default for Settings {
             windows_shell: WindowsShell::Cmd,
             kill_timeout_ms: 300,
             auto_check_updates: false,
+            start_with_system: false,
+            close_behavior: "ask".to_string(),
         }
     }
 }

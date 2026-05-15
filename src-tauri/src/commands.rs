@@ -6,6 +6,19 @@ use serde::Serialize;
 use std::path::PathBuf;
 use std::time::Duration;
 use tauri::{AppHandle, Manager};
+use tauri_plugin_autostart::ManagerExt;
+
+/// Sync the OS autostart entry with the desired state. Errors are swallowed
+/// so a flaky launchd / registry call never blocks a settings save.
+pub fn apply_autostart(app: &AppHandle, enabled: bool) {
+    let mgr = app.autolaunch();
+    let currently = mgr.is_enabled().unwrap_or(false);
+    if enabled && !currently {
+        let _ = mgr.enable();
+    } else if !enabled && currently {
+        let _ = mgr.disable();
+    }
+}
 
 fn data_dir(app: &AppHandle) -> Result<PathBuf, String> {
     app.path().app_data_dir().map_err(|e| e.to_string())
@@ -50,6 +63,20 @@ pub fn get_app_version() -> String {
     env!("CARGO_PKG_VERSION").to_string()
 }
 
+// ---------- Window lifecycle ----------
+
+#[tauri::command]
+pub fn quit_app(app: AppHandle) {
+    app.exit(0);
+}
+
+#[tauri::command]
+pub fn hide_to_tray(app: AppHandle) {
+    if let Some(w) = app.get_webview_window("main") {
+        let _ = w.hide();
+    }
+}
+
 // ---------- Port Explorer ----------
 
 #[tauri::command]
@@ -85,6 +112,7 @@ pub async fn get_settings(app: AppHandle) -> Result<Settings, String> {
 pub async fn save_settings(app: AppHandle, settings: Settings) -> Result<(), String> {
     let dir = data_dir(&app)?;
     settings::save(&dir, &settings).map_err(|e| e.to_string())?;
+    apply_autostart(&app, settings.start_with_system);
     let state = app.state::<SettingsState>();
     state.replace(settings);
     Ok(())
@@ -95,6 +123,7 @@ pub async fn reset_settings(app: AppHandle) -> Result<Settings, String> {
     let dir = data_dir(&app)?;
     let defaults = Settings::default();
     settings::save(&dir, &defaults).map_err(|e| e.to_string())?;
+    apply_autostart(&app, defaults.start_with_system);
     let state = app.state::<SettingsState>();
     state.replace(defaults.clone());
     Ok(defaults)
