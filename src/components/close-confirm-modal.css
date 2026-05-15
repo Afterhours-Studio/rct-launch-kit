@@ -26,8 +26,8 @@
 
 .close-modal__dismiss {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 18px;
+  right: 14px;
   width: 26px;
   height: 26px;
   display: grid;
