@@ -11,14 +11,14 @@ built in.
 
 Native Windows, macOS, and Linux app. No browser tab, no terminal soup.
 
-> Crafted by [h1dr0n](https://github.com/h1dr0nn).
+> Crafted by [h1dr0n](https://github.com/h1dr0n).
 
 ---
 
 ## Download
 
 Grab the latest installer from the
-**[Releases](https://github.com/h1dr0nn/rct-launch-kit/releases)** page.
+**[Releases](https://github.com/Afterhours-Studio/rct-launch-kit/releases)** page.
 
 | OS | File |
 |---|---|

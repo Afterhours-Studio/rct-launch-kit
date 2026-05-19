@@ -31,7 +31,7 @@ const IS_WINDOWS =
   typeof navigator !== "undefined" &&
   /win/i.test(navigator.platform || navigator.userAgent || "");
 
-const REPO_URL = "https://github.com/h1dr0nn";
+const REPO_URL = "https://github.com/h1dr0n";
 
 export function SettingsView() {
   const settings = useSettings((s) => s.settings);
