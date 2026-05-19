@@ -131,7 +131,7 @@ pub async fn reset_settings(app: AppHandle) -> Result<Settings, String> {
 
 // ---------- Updates ----------
 
-const REPO_OWNER: &str = "h1dr0n";
+const REPO_OWNER: &str = "Afterhours-Studio";
 const REPO_NAME: &str = "rct-launch-kit";
 
 #[derive(Serialize)]
