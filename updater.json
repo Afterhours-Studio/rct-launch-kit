@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "notes": "Initial manifest — populated by CI on each tagged release.",
-  "pub_date": "2026-05-15T11:24:35.932Z",
+  "pub_date": "2026-05-19T15:22:28.121Z",
   "platforms": {
     "windows-x86_64": {
       "url": "",
@@ -13,11 +13,11 @@
     },
     "darwin-x86_64": {
       "url": "https://github.com/Afterhours-Studio/rct-launch-kit/releases/download/release-v1.0.0/dev-launch-kit-1.0.0-macos-x64-updater.app.tar.gz",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcW5OQXBqeHpqR29DaVVSVnIwWCsya0UzbnQ4OXR4Q0N3RHBJdG9Sa3B4Q1lldW1qNVdHa0RiWjZxZHU1ckxrSUNDdC94T0lEWVk0aEpUYnpHQXZkVXpCSUlxc0RTclFBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc4ODQ0MTkyCWZpbGU6RGV2IExhdW5jaCBLaXQuYXBwLnRhci5negp3aDlObm9pSHBMcUZSb21mMVFJMERJelg4Y0N4M2JoeXlLWTB6TzJvQUdQK3dVWDF2dmd5RWh5aGNKQUZuQ21VV0pPOXlvS0tTR2s5N3JydHZrZW5BQT09Cg=="
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcW5OQXBqeHpqR2dPR2QrTUlHRlFmWTZyOGlVcmp0VHdOdXRWNTlPWWFuLzN4YWN4VWlTdE16bEQzT2pGeEszU01OUUhQWGVrbkphR3hlTVFLNm1PNCtSWkpuWUdEdHdrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc5MjA0MTEwCWZpbGU6RGV2IExhdW5jaCBLaXQuYXBwLnRhci5negpKbitIby9WM0RJQ2dxdDlScEtTb3MvN3hXQThRTUliWWpNeXBGNnVsVDdGd0ptQ3RuTkxFK1h0d05nRWhhc0VKWEl6SHMrcFFXWFk5eDRZWE8waU5BZz09Cg=="
     },
     "darwin-aarch64": {
       "url": "https://github.com/Afterhours-Studio/rct-launch-kit/releases/download/release-v1.0.0/dev-launch-kit-1.0.0-macos-arm64-updater.app.tar.gz",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcW5OQXBqeHpqR2h1KzZRdzlaUW40T09XbEg3Zmw5ZGpUbXBPYkNHbVcxcDg2YldRdFVaWDNuMENydGhLdEdmaFFHYUhRSlhUTkkwZThUL3dtS0hLVnNNZHJjd1p2SXdVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc4ODQzOTQ4CWZpbGU6RGV2IExhdW5jaCBLaXQuYXBwLnRhci5negpZMFlWTE9BdnJ1eWgwQ05zWUg2MFRsdGNwY0x3Mm1PT2RibWFQTllNNkdCVDhydWRBbEk3NDVEdjUzbytXZG0wWHhmUGVRYjQxQlBVclc1M2QzUExDQT09Cg=="
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTcW5OQXBqeHpqR2lRR1p5ck1ITzZWSkVuNWE3dkhZbWR4SUlPTEFiLzlJYkNLeWMwd2EwT2V5SWFRYzVzNUp3ZVRVaWsyV29lUEQ2YjRLdkJkMGsyVlVFa2o2RGZsSGdRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzc5MjAzOTMyCWZpbGU6RGV2IExhdW5jaCBLaXQuYXBwLnRhci5negpRdEZIZ0FzR2YzbVN6QXRjZjN2UmJzc0dtLzZYZnFlU0hTNnNMcHNPd2phWGFVYWpHcVpqN25OZE9tSnFwYWp5OExkTjgwQnZ3ZXhPRmJTQ2hucU1EZz09Cg=="
     }
   }
 }
