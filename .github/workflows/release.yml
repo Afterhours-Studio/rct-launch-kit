@@ -144,6 +144,15 @@ jobs:
 
           echo "=== Bundle tree ==="
           ls -R "$BUNDLE" || true
+          echo ""
+          echo "=== Updater bundles found ==="
+          # The plugin requires *.nsis.zip (Windows), *.AppImage.tar.gz
+          # (Linux), or *.app.tar.gz (macOS) plus a matching .sig file.
+          # If this list is empty for the current platform, the release
+          # will not be self-installable and Install update will fail
+          # with "None of the fallback platforms were found".
+          find "$BUNDLE" \( -name "*.nsis.zip" -o -name "*.AppImage.tar.gz" -o -name "*.app.tar.gz" \) -print || true
+          echo ""
 
           if [ "$PLATFORM" = "windows" ]; then
             cp "$BUNDLE"/nsis/*.exe "release-artifacts/${PREFIX}-setup.exe" 2>/dev/null || true
@@ -153,6 +162,12 @@ jobs:
             [ -n "$UB" ] && cp "$UB" "release-artifacts/${PREFIX}-updater.nsis.zip"
             US=$(find "$BUNDLE" -name "*.nsis.zip.sig" | head -n 1)
             [ -n "$US" ] && cp "$US" "release-artifacts/${PREFIX}-updater.nsis.zip.sig"
+            if [ -z "$UB" ]; then
+              echo "::error::Windows NSIS updater bundle (*.nsis.zip) was not produced."
+              echo "::error::Expected at \$BUNDLE/nsis/<name>_<version>_x64-setup.nsis.zip."
+              echo "::error::Check that bundle.createUpdaterArtifacts is true and 'nsis' is in bundle.targets."
+              exit 1
+            fi
           elif [ "$PLATFORM" = "linux" ]; then
             cp "$BUNDLE"/appimage/*.AppImage "release-artifacts/${PREFIX}.AppImage" 2>/dev/null || true
             cp "$BUNDLE"/deb/*.deb           "release-artifacts/${PREFIX}.deb"      2>/dev/null || true
