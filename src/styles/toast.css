@@ -48,22 +48,18 @@
   content: "";
   position: absolute;
   left: 0;
-  top: 8px;
-  bottom: 8px;
+  /* Fixed 28px height centered vertically — independent of the toast's
+   * box dimensions. Sonner mutates --toast-height + transforms during
+   * stack/expand/exit transitions, so any rail sized via top/bottom or
+   * height:100% snaps along with the box. Hard-coding a small height +
+   * centering keeps the rail visually stable through every state. */
+  top: 50%;
+  margin-top: -14px;
+  height: 28px;
   width: 3px;
   border-radius: 0 2px 2px 0;
   background: var(--popover-text-muted);
   pointer-events: none;
-}
-
-/* In stack mode, behind-toasts keep their full intrinsic height even
- * though only a thin "peek" strip is visually exposed under the front
- * toast. The rail filling that full height would show as a tall vertical
- * line bleeding above the visible toast — so hide it on non-front
- * toasts. When the user hovers and Sonner expands the stack, every
- * toast becomes data-front="true" and shows its rail normally. */
-[data-sonner-toast][data-front="false"][data-type]::before {
-  display: none;
 }
 
 [data-sonner-toast][data-type="success"]::before {
