@@ -226,37 +226,75 @@ fn descendants_snapshot(root: u32) -> Vec<u32> {
     out
 }
 
+#[cfg(windows)]
+fn taskkill_pids(pids: &[u32]) {
+    if pids.is_empty() {
+        return;
+    }
+    use std::os::windows::process::CommandExt;
+    // taskkill /F /PID accepts multiple /PID args in one shot.
+    let mut args: Vec<String> = vec!["/F".into()];
+    for p in pids {
+        args.push("/PID".into());
+        args.push(p.to_string());
+    }
+    let _ = std::process::Command::new("taskkill")
+        .args(&args)
+        .creation_flags(0x0800_0000)
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .status();
+}
+
+#[cfg(unix)]
+fn unix_kill_pids(pids: &[u32], signal: &str) {
+    for p in pids {
+        let _ = std::process::Command::new("kill")
+            .args([signal, &p.to_string()])
+            .status();
+    }
+}
+
+/// Force-terminate `pid` and every descendant we can find.
+///
+/// Why this is more involved than a single `taskkill /T` / `kill -PGID`:
+///
+/// Long dev-tool chains (e.g. `cmd → npm → node → cargo → app.exe →
+/// vite`) routinely produce **orphans**. The moment any middle process
+/// exits, its children get re-parented (System on Windows, init on
+/// Unix) and slip out of every kill mechanism that walks the live
+/// parent → child chain. We've watched this happen: `game-pilot.exe`
+/// and `vite` kept emitting logs long after Stop was clicked because
+/// they had already detached from their grandparent.
+///
+/// The fix is three-pronged:
+///
+///   1. **Snapshot first** every transitive descendant via sysinfo
+///      *before* issuing any kill. The snapshot pins each PID to a
+///      target list regardless of what happens to the live tree during
+///      the kill cascade.
+///   2. **Multi-pronged kill** — issue per-PID kills from the snapshot
+///      AND a tree-kill on the root, so we catch both
+///      already-orphaned descendants and any freshly-spawned children
+///      that were not in the snapshot.
+///   3. **Verify and retry** — re-snapshot after a brief settling
+///      window; anything still alive gets another kill round. Survivors
+///      after that are logged to stderr so they show up when the app is
+///      run from a console.
 fn kill_tree(pid: u32, kill_timeout_ms: u32) {
-    // Snapshot every descendant FIRST. `taskkill /T` and `kill -- -PGID`
-    // both rely on the parent → child chain being intact at kill time;
-    // any descendant whose parent dies first becomes an orphan (Windows
-    // reparents to System; Unix reparents to init) and slips out of the
-    // tree-kill. Long dev-tool chains like `npm → node → cargo →
-    // app.exe → vite` routinely produce these orphans. Killing each PID
-    // from the snapshot guarantees we hit them even after the tree
-    // breaks underneath us.
-    let pids = descendants_snapshot(pid);
+    let initial = descendants_snapshot(pid);
+    eprintln!(
+        "[runner::kill_tree] root={} snapshot={:?}",
+        pid, initial
+    );
 
     #[cfg(windows)]
     {
         use std::os::windows::process::CommandExt;
-        // taskkill /F /PID accepts multiple /PID args in one shot.
-        let mut args: Vec<String> = vec!["/F".into()];
-        for p in &pids {
-            args.push("/PID".into());
-            args.push(p.to_string());
-        }
-        if !pids.is_empty() {
-            let _ = std::process::Command::new("taskkill")
-                .args(&args)
-                .creation_flags(0x0800_0000)
-                .stdin(Stdio::null())
-                .stdout(Stdio::null())
-                .stderr(Stdio::null())
-                .status();
-        }
-        // Belt-and-suspenders: also call /T on the root in case sysinfo
-        // missed a freshly-spawned child between snapshot and kill.
+        taskkill_pids(&initial);
+        // Belt-and-suspenders: tree-walk from the root for any child
+        // spawned between snapshot and the per-PID taskkill above.
         let _ = std::process::Command::new("taskkill")
             .args(["/F", "/T", "/PID", &pid.to_string()])
             .creation_flags(0x0800_0000)
@@ -264,31 +302,56 @@ fn kill_tree(pid: u32, kill_timeout_ms: u32) {
             .stdout(Stdio::null())
             .stderr(Stdio::null())
             .status();
-        let _ = kill_timeout_ms; // unused on Windows
+        let _ = kill_timeout_ms; // Windows ignores the grace period.
     }
     #[cfg(unix)]
     {
-        // Try the process-group path first (catches anything still in
-        // the original PGID), then fall back to per-PID SIGTERM/SIGKILL
-        // on the snapshot for orphans that escaped the group.
+        // Primary: process-group SIGTERM (catches anything still in the
+        // original PGID we set via process_group(0) at spawn).
         let neg = format!("-{}", pid);
         let _ = std::process::Command::new("kill")
             .args(["--", &neg])
             .status();
-        for p in &pids {
-            let _ = std::process::Command::new("kill")
-                .args(["-TERM", &p.to_string()])
-                .status();
-        }
+        // Secondary: per-PID SIGTERM on the snapshot for orphans.
+        unix_kill_pids(&initial, "-TERM");
         std::thread::sleep(std::time::Duration::from_millis(kill_timeout_ms as u64));
+        // Hard kill survivors of the grace window.
         let _ = std::process::Command::new("kill")
             .args(["-9", "--", &neg])
             .status();
-        for p in &pids {
-            let _ = std::process::Command::new("kill")
-                .args(["-KILL", &p.to_string()])
-                .status();
-        }
+        unix_kill_pids(&initial, "-KILL");
+    }
+
+    // Verify + retry. Anything still alive in the descendant tree after
+    // the primary kill round indicates either:
+    //   (a) a process spawned mid-kill that we missed the first time, or
+    //   (b) a stubborn process that ignored the first SIGTERM (Unix) or
+    //       had a higher integrity level (Windows — would need elevation).
+    // Hit them once more; surface stragglers in the log for diagnostics.
+    std::thread::sleep(std::time::Duration::from_millis(200));
+    let survivors = descendants_snapshot(pid);
+    if survivors.is_empty() {
+        return;
+    }
+    eprintln!(
+        "[runner::kill_tree] survivors after first round={:?}; retrying",
+        survivors
+    );
+
+    #[cfg(windows)]
+    taskkill_pids(&survivors);
+    #[cfg(unix)]
+    unix_kill_pids(&survivors, "-KILL");
+
+    std::thread::sleep(std::time::Duration::from_millis(150));
+    let final_survivors = descendants_snapshot(pid);
+    if !final_survivors.is_empty() {
+        eprintln!(
+            "[runner::kill_tree] STILL ALIVE after retry: {:?} (root={}). \
+             These processes refused to die — may need elevation or are \
+             OS-protected.",
+            final_survivors, pid
+        );
     }
 }
 
