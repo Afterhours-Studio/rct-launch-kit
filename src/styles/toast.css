@@ -35,44 +35,44 @@
   margin-top: 2px !important;
 }
 
-/* Type signal — straight 3px left rail rendered as an absolute child so
- * it can sit inset from the toast's rounded corners (top:8 / bottom:8
- * gives clean straight ends instead of the curved look you'd get with
- * inset box-shadow or border-left clipped by border-radius). */
+/* Type signal — straight 3px left rail, 28px tall, vertically centered.
+ *
+ * IMPORTANT: rendered as a `background-image` layer rather than a
+ * pseudo-element. Sonner already uses `::before` itself for the
+ * swipe-to-dismiss hit area (it overrides ::before with
+ * `transform: scaleY(3); left/right: -100%` whenever data-swiping=true)
+ * and `::after` for the expanded-stack hover gap. Any rail of ours
+ * placed on either pseudo-element gets clobbered the moment the user
+ * hovers/swipes, which is exactly the "rail bleeds way above the toast"
+ * deformation you were seeing.
+ *
+ * A background-image gradient is part of the toast's own background
+ * stack and can't be touched by Sonner's selectors. The 28px tall band
+ * sits in the vertical middle, well clear of the 10px border-radius
+ * corners, so it reads as a straight rail without curving. */
 [data-sonner-toast][data-type] {
-  position: relative;
   padding-left: 16px !important;
 }
 
-[data-sonner-toast][data-type]::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  /* Fixed 28px height centered vertically — independent of the toast's
-   * box dimensions. Sonner mutates --toast-height + transforms during
-   * stack/expand/exit transitions, so any rail sized via top/bottom or
-   * height:100% snaps along with the box. Hard-coding a small height +
-   * centering keeps the rail visually stable through every state. */
-  top: 50%;
-  margin-top: -14px;
-  height: 28px;
-  width: 3px;
-  border-radius: 0 2px 2px 0;
-  background: var(--popover-text-muted);
-  pointer-events: none;
+[data-sonner-toast][data-type="success"] {
+  background:
+    linear-gradient(to right, #5db872 0 3px, transparent 3px) left center / 100% 28px no-repeat,
+    var(--glass-bg-strong) !important;
 }
-
-[data-sonner-toast][data-type="success"]::before {
-  background: #5db872;
+[data-sonner-toast][data-type="error"] {
+  background:
+    linear-gradient(to right, #c64545 0 3px, transparent 3px) left center / 100% 28px no-repeat,
+    var(--glass-bg-strong) !important;
 }
-[data-sonner-toast][data-type="error"]::before {
-  background: #c64545;
+[data-sonner-toast][data-type="warning"] {
+  background:
+    linear-gradient(to right, #d4a017 0 3px, transparent 3px) left center / 100% 28px no-repeat,
+    var(--glass-bg-strong) !important;
 }
-[data-sonner-toast][data-type="warning"]::before {
-  background: #d4a017;
-}
-[data-sonner-toast][data-type="info"]::before {
-  background: #cc785c;
+[data-sonner-toast][data-type="info"] {
+  background:
+    linear-gradient(to right, #cc785c 0 3px, transparent 3px) left center / 100% 28px no-repeat,
+    var(--glass-bg-strong) !important;
 }
 
 /* Default sonner icons — recolour to match the rail. */
