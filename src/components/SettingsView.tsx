@@ -88,7 +88,7 @@ export function SettingsView() {
       try {
         const update = await checkForUpdate();
         if (update) {
-          toast.success(`Update available: v${update.version} — installing…`);
+          toast.success(`Update available: v${update.version}. Installing…`);
           await update.downloadAndInstall();
           await relaunch();
           return;
@@ -116,11 +116,18 @@ export function SettingsView() {
     }
   }
 
-  // Auto-check on first mount when enabled.
+  // Silent probe on mount so the banner is always present without making
+  // the user click "Check for updates". This only hits the HTTP fallback
+  // (cheap, no install, no toast) — the explicit button still runs the
+  // signed-bundle plugin and triggers the actual download/relaunch flow.
   useEffect(() => {
-    if (settings.autoCheckUpdates && !lastUpdate) {
-      onCheckUpdate();
-    }
+    if (lastUpdate) return;
+    api
+      .checkUpdate()
+      .then(setLastUpdate)
+      .catch(() => {
+        // Network failures are non-fatal; the banner just stays hidden.
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -253,19 +260,17 @@ export function SettingsView() {
         </Section>
 
         <Section title="Updates" hint="Stay current with the latest release.">
-          <Row label="Auto-check on startup">
-            <Toggle
-              checked={settings.autoCheckUpdates}
-              onChange={(v) => update({ autoCheckUpdates: v })}
-            />
-          </Row>
-          {lastUpdate && (
+          {lastUpdate ? (
             <UpdateBanner
               info={lastUpdate}
               onOpen={() =>
                 lastUpdate.releaseUrl && openUrl(lastUpdate.releaseUrl)
               }
             />
+          ) : (
+            <div className="settings-update settings-update--ok">
+              <span className="settings-update__text">Checking for updates…</span>
+            </div>
           )}
         </Section>
 
@@ -469,7 +474,7 @@ function UpdateBanner({
       <div className="settings-update__text">
         {info.hasUpdate && info.latest ? (
           <>
-            <strong>v{info.latest}</strong> is available — you have v
+            <strong>v{info.latest}</strong> is available. You have v
             {info.current}.
           </>
         ) : info.notes ? (

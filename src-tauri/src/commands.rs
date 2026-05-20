@@ -226,10 +226,18 @@ pub async fn check_update() -> Result<UpdateInfo, String> {
         Err(e) => return Err(format!("invalid response: {}", e)),
     };
 
+    // Tags follow `release-v<semver>` (stable) and `develop-v<semver>` (dev).
+    // Strip both prefixes plus a bare `v` so the UI sees a clean semver
+    // string and can prepend its own `v` for display.
     let tag = json
         .get("tag_name")
         .and_then(|v| v.as_str())
-        .map(|s| s.trim_start_matches('v').to_string());
+        .map(|s| {
+            s.trim_start_matches("release-")
+                .trim_start_matches("develop-")
+                .trim_start_matches('v')
+                .to_string()
+        });
     let release_url = json
         .get("html_url")
         .and_then(|v| v.as_str())
