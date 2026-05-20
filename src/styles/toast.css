@@ -15,14 +15,13 @@
   backdrop-filter: var(--glass-blur);
   border: 1px solid var(--glass-border) !important;
   border-radius: 10px !important;
+  /* Default elevation; the type rail is added as a third inset shadow
+   * layer on coloured toasts below. */
   box-shadow: var(--shadow-3), var(--hairline-inset) !important;
   color: var(--popover-text) !important;
   padding: 12px 14px !important;
   font-size: 13px !important;
   line-height: 1.45 !important;
-  /* Clip the absolute-positioned ::before rail so it can't bleed past
-   * the visible toast box when Sonner expands the stack on hover. */
-  overflow: hidden !important;
 }
 
 /* Title text — slightly stronger than body to anchor the toast. */
@@ -38,35 +37,38 @@
   margin-top: 2px !important;
 }
 
-/* Type signal — coloured 3px left rail. Subtle but unambiguous, no
- * heavy bg tints that would clash with the glass look. */
+/* Type signal — coloured 3px left rail rendered as an inset box-shadow
+ * layer so it is part of the toast's own border, not a positioned child.
+ * That guarantees it cannot bleed outside the toast box during Sonner's
+ * stack → expand hover transition (which deformed an absolute ::before
+ * implementation). */
 [data-sonner-toast][data-type] {
-  position: relative;
   padding-left: 16px !important;
 }
 
-[data-sonner-toast][data-type]::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 8px;
-  bottom: 8px;
-  width: 3px;
-  border-radius: 0 2px 2px 0;
-  background: var(--popover-text-muted);
+[data-sonner-toast][data-type="success"] {
+  box-shadow:
+    var(--shadow-3),
+    var(--hairline-inset),
+    inset 3px 0 0 #5db872 !important;
 }
-
-[data-sonner-toast][data-type="success"]::before {
-  background: #5db872;
+[data-sonner-toast][data-type="error"] {
+  box-shadow:
+    var(--shadow-3),
+    var(--hairline-inset),
+    inset 3px 0 0 #c64545 !important;
 }
-[data-sonner-toast][data-type="error"]::before {
-  background: #c64545;
+[data-sonner-toast][data-type="warning"] {
+  box-shadow:
+    var(--shadow-3),
+    var(--hairline-inset),
+    inset 3px 0 0 #d4a017 !important;
 }
-[data-sonner-toast][data-type="warning"]::before {
-  background: #d4a017;
-}
-[data-sonner-toast][data-type="info"]::before {
-  background: #cc785c;
+[data-sonner-toast][data-type="info"] {
+  box-shadow:
+    var(--shadow-3),
+    var(--hairline-inset),
+    inset 3px 0 0 #cc785c !important;
 }
 
 /* Default sonner icons — recolour to match the rail. */
