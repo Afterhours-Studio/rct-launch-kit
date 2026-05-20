@@ -59,9 +59,21 @@ export function SettingsView() {
       await relaunch();
     } catch (e) {
       const msg = String(e);
-      // Common case: updater.json has an empty URL for the current
-      // platform (CI didn't publish a signed bundle for it yet).
-      if (msg.includes("relative URL without a base") || msg.includes("empty")) {
+      // Three common "not really a crash" cases — surface the same
+      // friendly fall-back message instead of the raw plugin error:
+      //   1. updater.json has an empty URL for the current platform
+      //      (CI didn't publish a signed bundle for it yet).
+      //   2. updater.json has no entry at all for the platform — the
+      //      plugin reports "None of the fallback platforms [...] were
+      //      found in the response `platforms` object".
+      //   3. The endpoint returned 404 / network error (we treat as
+      //      "no bundle available").
+      const isMissingBundle =
+        msg.includes("relative URL without a base") ||
+        msg.includes("empty") ||
+        msg.includes("None of the fallback platforms") ||
+        msg.includes("were found in the response");
+      if (isMissingBundle) {
         toast.message(
           "No signed bundle published for this platform yet. Use View release to download manually.",
         );

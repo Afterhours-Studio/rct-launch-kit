@@ -265,23 +265,35 @@ jobs:
           updater.version = version;
           updater.pub_date = new Date().toISOString();
 
-          // Map our artifact naming → tauri's platform key.
+          // Map our artifact naming → tauri's platform keys.
+          //
+          // tauri-plugin-updater v2 looks up `<os>-<arch>-<installer>`
+          // first (e.g. windows-x86_64-nsis) and only falls back to the
+          // bare `<os>-<arch>` after that fails. Earlier releases only
+          // had the bare key, so users on Windows hit:
+          //
+          //   "None of the fallback platforms
+          //    ['windows-x86_64-nsis', 'windows-x86_64'] were found"
+          //
+          // Publishing BOTH keys per platform (pointing at the same
+          // bundle/signature) covers the plugin's primary lookup and
+          // leaves a back-compat alias for older clients.
           const platforms = {
             "windows-x86_64": {
               ext: "windows-x64-updater.nsis.zip",
-              key: "windows-x86_64",
+              keys: ["windows-x86_64-nsis", "windows-x86_64"],
             },
             "linux-x86_64": {
               ext: "linux-x64-updater.AppImage.tar.gz",
-              key: "linux-x86_64",
+              keys: ["linux-x86_64-appimage", "linux-x86_64"],
             },
             "darwin-x86_64": {
               ext: "macos-x64-updater.app.tar.gz",
-              key: "darwin-x86_64",
+              keys: ["darwin-x86_64"],
             },
             "darwin-aarch64": {
               ext: "macos-arm64-updater.app.tar.gz",
-              key: "darwin-aarch64",
+              keys: ["darwin-aarch64"],
             },
           };
 
@@ -291,21 +303,26 @@ jobs:
           // without a base") instead of treating them as "no update".
           updater.platforms = {};
           const files = fs.readdirSync("artifacts");
-          for (const [_, { ext, key }] of Object.entries(platforms)) {
+          for (const [name, { ext, keys }] of Object.entries(platforms)) {
             const bundle = files.find((f) => f.endsWith(ext));
             const sig = bundle && files.find((f) => f === `${bundle}.sig`);
             if (!bundle) {
-              console.warn(`! Missing bundle for ${key} (looking for *${ext})`);
+              console.warn(`! Missing bundle for ${name} (looking for *${ext})`);
               continue;
             }
             const sigContent = sig
               ? fs.readFileSync(path.join("artifacts", sig), "utf8").trim()
               : "";
-            updater.platforms[key] = {
+            const entry = {
               url: `${baseUrl}/${bundle}`,
               signature: sigContent,
             };
-            console.log(`✓ ${key} → ${bundle}${sig ? "" : "  (no sig!)"}`);
+            for (const k of keys) {
+              updater.platforms[k] = entry;
+            }
+            console.log(
+              `✓ ${name} (${keys.join(", ")}) → ${bundle}${sig ? "" : "  (no sig!)"}`,
+            );
           }
 
           fs.writeFileSync("updater.json", JSON.stringify(updater, null, 2));
