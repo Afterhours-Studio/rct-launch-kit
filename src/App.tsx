@@ -117,7 +117,6 @@ function App() {
         gap={10}
         visibleToasts={4}
         closeButton
-        expand
         toastOptions={{
           className: "app-toast",
           duration: 4000,
