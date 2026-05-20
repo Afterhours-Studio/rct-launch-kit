@@ -145,43 +145,56 @@ jobs:
           echo "=== Bundle tree ==="
           ls -R "$BUNDLE" || true
           echo ""
-          echo "=== Updater bundles found ==="
-          # The plugin requires *.nsis.zip (Windows), *.AppImage.tar.gz
-          # (Linux), or *.app.tar.gz (macOS) plus a matching .sig file.
-          # If this list is empty for the current platform, the release
-          # will not be self-installable and Install update will fail
-          # with "None of the fallback platforms were found".
-          find "$BUNDLE" \( -name "*.nsis.zip" -o -name "*.AppImage.tar.gz" -o -name "*.app.tar.gz" \) -print || true
+          echo "=== Updater bundles (.sig pairs) found ==="
+          # Tauri 2.11+ no longer wraps the installer in a .zip for the
+          # updater. The signed installer itself (-setup.exe / .msi /
+          # .AppImage / .app.tar.gz / .dmg) is the updater bundle, paired
+          # with a .sig file next to it. If this list is empty for the
+          # current platform, Install update will fail with "None of
+          # the fallback platforms were found in the response".
+          find "$BUNDLE" -name "*.sig" -print || true
           echo ""
 
+          # Tauri 2.11+ pattern: the signed installer is itself the
+          # updater bundle (no more .zip wrapper). For each platform we
+          # collect (a) the installer, (b) the installer's .sig file —
+          # then rename with PREFIX so the publish job can find them.
           if [ "$PLATFORM" = "windows" ]; then
-            cp "$BUNDLE"/nsis/*.exe "release-artifacts/${PREFIX}-setup.exe" 2>/dev/null || true
-            cp "$BUNDLE"/msi/*.msi  "release-artifacts/${PREFIX}.msi"       2>/dev/null || true
-            # Updater bundles for tauri-plugin-updater (signed .nsis.zip).
-            UB=$(find "$BUNDLE" -name "*.nsis.zip" | head -n 1)
-            [ -n "$UB" ] && cp "$UB" "release-artifacts/${PREFIX}-updater.nsis.zip"
-            US=$(find "$BUNDLE" -name "*.nsis.zip.sig" | head -n 1)
-            [ -n "$US" ] && cp "$US" "release-artifacts/${PREFIX}-updater.nsis.zip.sig"
-            if [ -z "$UB" ]; then
-              echo "::error::Windows NSIS updater bundle (*.nsis.zip) was not produced."
-              echo "::error::Expected at \$BUNDLE/nsis/<name>_<version>_x64-setup.nsis.zip."
-              echo "::error::Check that bundle.createUpdaterArtifacts is true and 'nsis' is in bundle.targets."
+            # NSIS — the .exe is both the installer AND the updater bundle.
+            EXE=$(find "$BUNDLE/nsis" -name "*-setup.exe" -not -name "*.sig" | head -n 1)
+            SIG=$(find "$BUNDLE/nsis" -name "*-setup.exe.sig" | head -n 1)
+            [ -n "$EXE" ] && cp "$EXE" "release-artifacts/${PREFIX}-setup.exe"
+            [ -n "$SIG" ] && cp "$SIG" "release-artifacts/${PREFIX}-setup.exe.sig"
+            # MSI — secondary installer, no updater wiring.
+            cp "$BUNDLE"/msi/*.msi "release-artifacts/${PREFIX}.msi" 2>/dev/null || true
+            if [ -z "$EXE" ] || [ -z "$SIG" ]; then
+              echo "::error::Windows NSIS bundle missing — exe='$EXE' sig='$SIG'."
+              echo "::error::Check bundle.createUpdaterArtifacts=true and 'nsis' in bundle.targets."
               exit 1
             fi
           elif [ "$PLATFORM" = "linux" ]; then
-            cp "$BUNDLE"/appimage/*.AppImage "release-artifacts/${PREFIX}.AppImage" 2>/dev/null || true
-            cp "$BUNDLE"/deb/*.deb           "release-artifacts/${PREFIX}.deb"      2>/dev/null || true
+            # AppImage — the file is both the installer and updater bundle.
+            APP=$(find "$BUNDLE/appimage" -name "*.AppImage" -not -name "*.sig" | head -n 1)
+            SIG=$(find "$BUNDLE/appimage" -name "*.AppImage.sig" | head -n 1)
+            [ -n "$APP" ] && cp "$APP" "release-artifacts/${PREFIX}.AppImage"
+            [ -n "$SIG" ] && cp "$SIG" "release-artifacts/${PREFIX}.AppImage.sig"
             chmod +x "release-artifacts/${PREFIX}.AppImage" 2>/dev/null || true
-            UB=$(find "$BUNDLE" -name "*.AppImage.tar.gz" | head -n 1)
-            [ -n "$UB" ] && cp "$UB" "release-artifacts/${PREFIX}-updater.AppImage.tar.gz"
-            US=$(find "$BUNDLE" -name "*.AppImage.tar.gz.sig" | head -n 1)
-            [ -n "$US" ] && cp "$US" "release-artifacts/${PREFIX}-updater.AppImage.tar.gz.sig"
+            cp "$BUNDLE"/deb/*.deb "release-artifacts/${PREFIX}.deb" 2>/dev/null || true
+            if [ -z "$APP" ] || [ -z "$SIG" ]; then
+              echo "::error::Linux AppImage bundle missing — app='$APP' sig='$SIG'."
+              exit 1
+            fi
           elif [ "$PLATFORM" = "macos" ]; then
+            # macOS — DMG for download, .app.tar.gz for the updater bundle.
             cp "$BUNDLE"/dmg/*.dmg "release-artifacts/${PREFIX}.dmg" 2>/dev/null || true
-            UB=$(find "$BUNDLE" -name "*.app.tar.gz" | head -n 1)
-            [ -n "$UB" ] && cp "$UB" "release-artifacts/${PREFIX}-updater.app.tar.gz"
-            US=$(find "$BUNDLE" -name "*.app.tar.gz.sig" | head -n 1)
-            [ -n "$US" ] && cp "$US" "release-artifacts/${PREFIX}-updater.app.tar.gz.sig"
+            APP=$(find "$BUNDLE" -name "*.app.tar.gz" -not -name "*.sig" | head -n 1)
+            SIG=$(find "$BUNDLE" -name "*.app.tar.gz.sig" | head -n 1)
+            [ -n "$APP" ] && cp "$APP" "release-artifacts/${PREFIX}-updater.app.tar.gz"
+            [ -n "$SIG" ] && cp "$SIG" "release-artifacts/${PREFIX}-updater.app.tar.gz.sig"
+            if [ -z "$APP" ] || [ -z "$SIG" ]; then
+              echo "::error::macOS updater bundle missing — app='$APP' sig='$SIG'."
+              exit 1
+            fi
           fi
 
           echo "=== Final artifacts ==="
@@ -295,11 +308,14 @@ jobs:
           // leaves a back-compat alias for older clients.
           const platforms = {
             "windows-x86_64": {
-              ext: "windows-x64-updater.nsis.zip",
+              // Tauri 2.11+ uses the signed -setup.exe directly as the
+              // updater bundle for NSIS (no more .zip wrapper).
+              ext: "windows-x64-setup.exe",
               keys: ["windows-x86_64-nsis", "windows-x86_64"],
             },
             "linux-x86_64": {
-              ext: "linux-x64-updater.AppImage.tar.gz",
+              // AppImage is itself the updater bundle on Linux.
+              ext: "linux-x64.AppImage",
               keys: ["linux-x86_64-appimage", "linux-x86_64"],
             },
             "darwin-x86_64": {
