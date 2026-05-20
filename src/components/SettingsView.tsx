@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   ArrowUpCircle,
   AlertCircle,
+  Download,
 } from "lucide-react";
 import { toast } from "sonner";
 import { openUrl } from "@tauri-apps/plugin-opener";
@@ -40,8 +41,28 @@ export function SettingsView() {
 
   const [resetting, setResetting] = useState(false);
   const [checking, setChecking] = useState(false);
+  const [installing, setInstalling] = useState(false);
   const [lastUpdate, setLastUpdate] = useState<UpdateInfo | null>(null);
   const [version, setVersion] = useState<string | null>(null);
+
+  async function onInstallUpdate() {
+    if (installing) return;
+    setInstalling(true);
+    try {
+      const update = await checkForUpdate();
+      if (!update) {
+        toast.message("No signed bundle published yet — use View release.");
+        return;
+      }
+      toast.success(`Downloading v${update.version}…`);
+      await update.downloadAndInstall();
+      await relaunch();
+    } catch (e) {
+      toast.error(`Install failed: ${String(e)}`);
+    } finally {
+      setInstalling(false);
+    }
+  }
 
   useEffect(() => {
     api.getAppVersion().then(setVersion).catch(() => {});
@@ -263,6 +284,8 @@ export function SettingsView() {
           {lastUpdate ? (
             <UpdateBanner
               info={lastUpdate}
+              installing={installing}
+              onInstall={onInstallUpdate}
               onOpen={() =>
                 lastUpdate.releaseUrl && openUrl(lastUpdate.releaseUrl)
               }
@@ -451,13 +474,14 @@ function NumberInput({
   );
 }
 
-function UpdateBanner({
-  info,
-  onOpen,
-}: {
+interface UpdateBannerProps {
   info: UpdateInfo;
+  installing: boolean;
   onOpen: () => void;
-}) {
+  onInstall: () => void;
+}
+
+function UpdateBanner({ info, installing, onOpen, onInstall }: UpdateBannerProps) {
   const cls = info.hasUpdate
     ? "settings-update settings-update--available"
     : info.source === "local" || info.notes
@@ -483,11 +507,32 @@ function UpdateBanner({
           <>You are running the latest version (v{info.current}).</>
         )}
       </div>
+      {info.hasUpdate && (
+        <button
+          type="button"
+          className="settings-update__action settings-update__action--primary"
+          onClick={onInstall}
+          disabled={installing}
+        >
+          {installing ? (
+            <>
+              <Loader2 size={12} strokeWidth={1.75} className="spin" />
+              <span>Installing…</span>
+            </>
+          ) : (
+            <>
+              <Download size={12} strokeWidth={1.75} />
+              <span>Install update</span>
+            </>
+          )}
+        </button>
+      )}
       {info.releaseUrl && (
         <button
           type="button"
           className="settings-update__action"
           onClick={onOpen}
+          disabled={installing}
         >
           View release
         </button>
