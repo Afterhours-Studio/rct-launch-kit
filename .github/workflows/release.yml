@@ -285,10 +285,15 @@ jobs:
             },
           };
 
+          // Rebuild platforms from scratch so any stale entry from the
+          // previous release (or seed stubs with empty URLs) gets dropped.
+          // tauri-plugin-updater chokes on empty URLs ("relative URL
+          // without a base") instead of treating them as "no update".
+          updater.platforms = {};
           const files = fs.readdirSync("artifacts");
           for (const [_, { ext, key }] of Object.entries(platforms)) {
             const bundle = files.find((f) => f.endsWith(ext));
-            const sig = files.find((f) => f === `${bundle}.sig`);
+            const sig = bundle && files.find((f) => f === `${bundle}.sig`);
             if (!bundle) {
               console.warn(`! Missing bundle for ${key} (looking for *${ext})`);
               continue;

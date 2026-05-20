@@ -51,14 +51,23 @@ export function SettingsView() {
     try {
       const update = await checkForUpdate();
       if (!update) {
-        toast.message("No signed bundle published yet — use View release.");
+        toast.message("No signed bundle published for this platform yet. Use View release to download manually.");
         return;
       }
       toast.success(`Downloading v${update.version}…`);
       await update.downloadAndInstall();
       await relaunch();
     } catch (e) {
-      toast.error(`Install failed: ${String(e)}`);
+      const msg = String(e);
+      // Common case: updater.json has an empty URL for the current
+      // platform (CI didn't publish a signed bundle for it yet).
+      if (msg.includes("relative URL without a base") || msg.includes("empty")) {
+        toast.message(
+          "No signed bundle published for this platform yet. Use View release to download manually.",
+        );
+      } else {
+        toast.error(`Install failed: ${msg}`);
+      }
     } finally {
       setInstalling(false);
     }

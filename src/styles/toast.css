@@ -20,6 +20,9 @@
   padding: 12px 14px !important;
   font-size: 13px !important;
   line-height: 1.45 !important;
+  /* Clip the absolute-positioned ::before rail so it can't bleed past
+   * the visible toast box when Sonner expands the stack on hover. */
+  overflow: hidden !important;
 }
 
 /* Title text — slightly stronger than body to anchor the toast. */
