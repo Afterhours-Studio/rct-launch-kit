@@ -246,23 +246,25 @@ pub async fn check_update() -> Result<UpdateInfo, String> {
         .get("published_at")
         .and_then(|v| v.as_str())
         .map(String::from);
-    let notes = json
-        .get("body")
-        .and_then(|v| v.as_str())
-        .map(|s| s.lines().take(8).collect::<Vec<_>>().join("\n"));
 
     let has_update = match (parse_semver(&current), tag.as_deref().and_then(parse_semver)) {
         (Some(c), Some(l)) => l > c,
         _ => tag.as_deref().map(|t| t != current).unwrap_or(false),
     };
 
+    // `notes` is intentionally None on the happy path. It is reserved for
+    // diagnostic states (network error, no releases published, non-200
+    // HTTP) so the UI can render a single "info / warning" line. Release
+    // changelogs live behind the "View release" link to GitHub — duplicating
+    // them in a toast or banner is noisy and unhelpful for the common
+    // "already up to date" check.
     Ok(UpdateInfo {
         current,
         latest: tag,
         has_update,
         release_url,
         published_at,
-        notes,
+        notes: None,
         source: UpdateSource::Github,
     })
 }

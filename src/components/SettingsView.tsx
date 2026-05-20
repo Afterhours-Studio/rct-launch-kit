@@ -135,9 +135,12 @@ export function SettingsView() {
       if (info.hasUpdate && info.latest) {
         toast.success(`Update available: v${info.latest}`);
       } else if (info.notes) {
+        // Diagnostic state (network error, no releases published, etc).
+        // notes is only populated on these paths now — never with the
+        // release changelog.
         toast.message(info.notes);
       } else {
-        toast.success(`You're up to date (v${info.current})`);
+        toast.success(`You're on the latest version (v${info.current})`);
       }
     } catch (e) {
       toast.error(`Check failed: ${String(e)}`);
@@ -511,9 +514,10 @@ function UpdateBanner({ info, installing, onOpen, onInstall }: UpdateBannerProps
             {info.current}.
           </>
         ) : info.notes ? (
+          // Diagnostic line (network error, no releases yet, etc).
           <>{info.notes}</>
         ) : (
-          <>You are running the latest version (v{info.current}).</>
+          <>You're on the latest version (v{info.current}).</>
         )}
       </div>
       {info.hasUpdate && (
@@ -536,7 +540,7 @@ function UpdateBanner({ info, installing, onOpen, onInstall }: UpdateBannerProps
           )}
         </button>
       )}
-      {info.releaseUrl && (
+      {info.hasUpdate && info.releaseUrl && (
         <button
           type="button"
           className="settings-update__action"
