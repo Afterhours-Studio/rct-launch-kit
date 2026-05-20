@@ -206,10 +206,57 @@ fn make_command(cmd: &str, cwd: &str, win_shell: WindowsShell) -> Command {
     c
 }
 
+/// Collect `root` plus every transitive descendant by walking sysinfo's
+/// parent → child relationships once. Used by both kill_tree and the
+/// metrics poller so they see exactly the same process universe.
+fn descendants_snapshot(root: u32) -> Vec<u32> {
+    use sysinfo::{ProcessRefreshKind, ProcessesToUpdate, RefreshKind, System};
+    let mut sys = System::new_with_specifics(
+        RefreshKind::new().with_processes(ProcessRefreshKind::new()),
+    );
+    sys.refresh_processes_specifics(
+        ProcessesToUpdate::All,
+        true,
+        ProcessRefreshKind::new(),
+    );
+    let mut out = Vec::new();
+    collect_descendants(&sys, root, &mut out);
+    out.sort_unstable();
+    out.dedup();
+    out
+}
+
 fn kill_tree(pid: u32, kill_timeout_ms: u32) {
+    // Snapshot every descendant FIRST. `taskkill /T` and `kill -- -PGID`
+    // both rely on the parent → child chain being intact at kill time;
+    // any descendant whose parent dies first becomes an orphan (Windows
+    // reparents to System; Unix reparents to init) and slips out of the
+    // tree-kill. Long dev-tool chains like `npm → node → cargo →
+    // app.exe → vite` routinely produce these orphans. Killing each PID
+    // from the snapshot guarantees we hit them even after the tree
+    // breaks underneath us.
+    let pids = descendants_snapshot(pid);
+
     #[cfg(windows)]
     {
         use std::os::windows::process::CommandExt;
+        // taskkill /F /PID accepts multiple /PID args in one shot.
+        let mut args: Vec<String> = vec!["/F".into()];
+        for p in &pids {
+            args.push("/PID".into());
+            args.push(p.to_string());
+        }
+        if !pids.is_empty() {
+            let _ = std::process::Command::new("taskkill")
+                .args(&args)
+                .creation_flags(0x0800_0000)
+                .stdin(Stdio::null())
+                .stdout(Stdio::null())
+                .stderr(Stdio::null())
+                .status();
+        }
+        // Belt-and-suspenders: also call /T on the root in case sysinfo
+        // missed a freshly-spawned child between snapshot and kill.
         let _ = std::process::Command::new("taskkill")
             .args(["/F", "/T", "/PID", &pid.to_string()])
             .creation_flags(0x0800_0000)
@@ -221,14 +268,27 @@ fn kill_tree(pid: u32, kill_timeout_ms: u32) {
     }
     #[cfg(unix)]
     {
+        // Try the process-group path first (catches anything still in
+        // the original PGID), then fall back to per-PID SIGTERM/SIGKILL
+        // on the snapshot for orphans that escaped the group.
         let neg = format!("-{}", pid);
         let _ = std::process::Command::new("kill")
             .args(["--", &neg])
             .status();
+        for p in &pids {
+            let _ = std::process::Command::new("kill")
+                .args(["-TERM", &p.to_string()])
+                .status();
+        }
         std::thread::sleep(std::time::Duration::from_millis(kill_timeout_ms as u64));
         let _ = std::process::Command::new("kill")
             .args(["-9", "--", &neg])
             .status();
+        for p in &pids {
+            let _ = std::process::Command::new("kill")
+                .args(["-KILL", &p.to_string()])
+                .status();
+        }
     }
 }
 
