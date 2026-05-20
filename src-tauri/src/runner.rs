@@ -364,9 +364,21 @@ pub async fn stop(app: AppHandle, project_id: &str) -> anyhow::Result<()> {
     let runner = app.state::<Runner>();
     let pids = {
         let runs = runner.runs.lock().await;
-        let handle = runs
-            .get(project_id)
-            .ok_or_else(|| anyhow::anyhow!("not running"))?;
+        let handle = match runs.get(project_id) {
+            Some(h) => h,
+            None => {
+                // Not in our runs map — most likely the watcher already
+                // emitted the terminal state but the UI's runningIds set
+                // hasn't reconciled yet. Treat as idempotent success so the
+                // UI can clear its stale flag without showing an error.
+                let active: Vec<&String> = runs.keys().collect();
+                eprintln!(
+                    "[runner::stop] no handle for {:?}; active = {:?}",
+                    project_id, active
+                );
+                return Ok(());
+            }
+        };
         handle.stopped.store(true, Ordering::SeqCst);
         handle.stop_flag.notify_waiters();
         let p = handle.active_pids.lock().await;

@@ -55,6 +55,18 @@ export function ProjectView() {
         await api.stopProject(draftId);
       } catch (e) {
         toast.error(`Stop failed: ${String(e)}`);
+        return;
+      }
+      // The watcher's proc://project terminal event will normally clear
+      // runningIds, but if state was already stale (e.g. id mismatch with
+      // backend, or terminal event missed during bootstrap) the UI would
+      // stay stuck on "Stop". Reconcile from the source of truth.
+      try {
+        const stillRunning = await api.listRunning();
+        const live = new Set(stillRunning);
+        useProjects.getState().setRunning(draftId, live.has(draftId));
+      } catch {
+        // Non-fatal — leave the listener to do its job.
       }
       return;
     }
